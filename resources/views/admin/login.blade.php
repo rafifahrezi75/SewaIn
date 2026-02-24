@@ -98,7 +98,7 @@
                         </div>
                         
                         <div class="text-right mt-8 pt-4">
-                            <p class="text-[12px] text-gray-400 tracking-wide font-light">Don't have an account? <a href="#" class="text-gray-300 hover:text-gray-400 underline underline-offset-2 font-normal">Sign up!</a></p>
+                            <p class="text-[12px] text-gray-400 tracking-wide font-light">Don't have an account? <a href="{{ url('register') }}" class="text-gray-300 hover:text-gray-400 underline underline-offset-2 font-normal">Sign up!</a></p>
                         </div>
                     </form>
 
