@@ -1,6 +1,6 @@
-@extends('layouts.admin')
+@extends('layouts.owner')
 
-@section('title', 'Dashboard')
+@section('title', 'Owner Dashboard')
 
 @section('content')
 <!-- Dashboard Stats Grid -->
@@ -58,15 +58,15 @@
     <div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-100 transition-shadow hover:shadow-md">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-sm font-medium text-gray-500">Total UMKM</p>
-                <h3 class="mt-2 text-3xl font-bold text-gray-800">24</h3>
+                <p class="text-sm font-medium text-gray-500">Total Pendapatan</p>
+                <h3 class="mt-2 text-xl font-bold text-gray-800">Rp 5.2M</h3>
             </div>
-            <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-2xl text-blue-500 shadow-inner">
-                <i class='bx bx-group'></i>
+            <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-2xl text-emerald-500 shadow-inner">
+                <i class='bx bx-wallet'></i>
             </div>
         </div>
         <div class="mt-4 flex items-center gap-2 text-sm">
-            <span class="text-gray-400 text-xs">Pelanggan Terdaftar</span>
+            <span class="text-emerald-500 font-medium bg-emerald-50 px-2 py-0.5 rounded-md text-xs">+12% Bulan ini</span>
         </div>
     </div>
 </div>
@@ -77,7 +77,7 @@
     <!-- Line Chart -->
     <div class="lg:col-span-2 bg-white rounded-3xl p-6 shadow-sm ring-1 ring-gray-100">
         <h2 class="text-xl font-bold text-gray-800 mb-4">
-            Statistik Penyewaan (2026)
+            Statistik Penyewaan & Pendapatan (2026)
         </h2>
         <div class="relative h-80 w-full">
             <canvas id="rentalsChart"></canvas>
@@ -87,7 +87,7 @@
     <!-- Pie Chart -->
     <div class="bg-white rounded-3xl p-6 shadow-sm ring-1 ring-gray-100">
         <h2 class="text-xl font-bold text-gray-800 mb-4">
-            Statistik Kategori
+            Alat Paling Diminati
         </h2>
         <div class="relative h-80 w-full">
             <canvas id="myPieChart"></canvas>
@@ -102,7 +102,7 @@
     <div class="lg:col-span-2 bg-white rounded-3xl p-6 shadow-sm ring-1 ring-gray-100">
         <div class="flex items-center justify-between mb-6">
             <h2 class="text-xl font-bold text-gray-800">Penyewaan Terbaru</h2>
-            <a href="#" class="text-sm font-medium text-brand-500 hover:text-brand-600 focus:outline-none">Lihat Semua</a>
+            <a href="{{ url('owner/transaksi') }}" class="text-sm font-medium text-brand-500 hover:text-brand-600 focus:outline-none">Lihat Semua</a>
         </div>
 
         <div class="overflow-x-auto">
@@ -216,8 +216,8 @@
             </div>
         </div>
 
-        <a href="{{ url('admin/alat') }}" class="relative z-10 w-full mt-6 bg-white text-center text-brand-600 rounded-xl py-3 font-semibold text-sm hover:bg-brand-50 transition-colors focus:outline-none shadow-sm inline-block">
-            Lihat Detail Alat
+        <a href="{{ url('owner/transaksi') }}" class="relative z-10 w-full mt-6 bg-white text-center text-brand-600 rounded-xl py-3 font-semibold text-sm hover:bg-brand-50 transition-colors focus:outline-none shadow-sm inline-block">
+            Lihat Transaksi Aktif
         </a>
     </div>
 </div>

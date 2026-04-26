@@ -1,124 +1,136 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="id">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SewaIN - Log In</title>
-
-    <!-- Google Fonts: Poppins -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- Tailwind CSS -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SewaIn</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Poppins', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            200: '#99f6e4',
-                            400: '#2dd4bf',
-                            500: '#14b8a6',
-                            600: '#0d9488',
-                            700: '#0f766e',
-                        }
-                    }
-                }
-            }
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #F1F5F9;
         }
-    </script>
 
-    <!-- Boxicons -->
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+        .text-primary { color: #1E3A8A; }
+        .bg-primary { background-color: #1E3A8A; }
+        .bg-aksen { background-color: #14B8A6; }
+        .text-aksen { color: #14B8A6; }
+
+        .focus-ring:focus {
+            border-color: #14B8A6;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
+        }
+    </style>
 </head>
-<body class="bg-[#14b8a6]/10 font-sans text-gray-800 antialiased overflow-hidden">
+<body>
 
-    <!-- Full Screen Solid Background -->
-    <div class="min-h-screen bg-brand-600 flex items-center justify-center p-4 sm:p-8 relative">
+<div class="min-h-screen flex items-center justify-center p-6">
+    <div class="max-w-4xl w-full bg-white rounded-[2.5rem] shadow-2xl shadow-blue-900/10 overflow-hidden flex flex-col md:flex-row">
 
-        <!-- Login Card Container -->
-        <div class="relative z-10 w-full max-w-4xl bg-white rounded-xl shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-[550px] md:min-h-[500px]">
-            
-            <!-- Left Image Section (Hidden on Mobile) -->
-            <div class="w-full md:w-1/2 relative hidden md:block bg-brand-500">
-                <!-- Image -> Warehouse (Moved from background) -->
-                <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');"></div>
-                <!-- Teal Overlay -->
-                <div class="absolute inset-0 bg-brand-500 opacity-30"></div>
-                <div class="absolute inset-0 bg-gradient-to-t from-brand-700 opacity-80 to-transparent"></div>
+        <div class="hidden md:flex md:w-[45%] bg-primary p-10 flex-col justify-between relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-32 -mt-32"></div>
+            <div class="absolute bottom-0 left-0 w-48 h-48 bg-aksen/20 rounded-full -ml-24 -mb-24 blur-3xl"></div>
+
+            <div class="relative z-10">
+                <div class="flex items-center gap-2 mb-8">
+                    <div class="w-9 h-9 bg-white rounded-xl flex items-center justify-center shadow-lg">
+                        <i data-lucide="layers" class="text-primary w-5 h-5"></i>
+                    </div>
+                    <span class="text-xl font-bold text-white tracking-tighter">SewaIn.</span>
+                </div>
+                <h2 class="text-3xl font-bold text-white leading-tight mb-5">
+                    Sewa Alat Produksi <br><span class="text-aksen">Dalam Satu Genggaman.</span>
+                </h2>
+                <p class="text-blue-100/80 text-md leading-relaxed">
+                    Masuk untuk Mencari dan Menyewa Alat Produksi Lebih Lanjut.
+                </p>
             </div>
 
-            <!-- Right Form Section -->
-            <div class="w-full md:w-1/2 bg-white relative flex flex-col justify-center px-8 py-10 sm:px-14 items-center xl:items-end">
-                
-                <!-- SVG S-Curve Border (Creates the wave effect overlapping the image) -->
-                <!-- It's positioned precisely on the left edge of this column and "spills" over into the left image area -->
-                <svg class="absolute top-0 bottom-0 left-0 w-24 h-full hidden md:block" style="transform: translateX(-99%); margin-left: 1px;" preserveAspectRatio="none" viewBox="0 0 100 100" fill="#ffffff">
-                    <path d="M100 0 L0 0 C50 0, 50 100, 100 100 Z" />
-                </svg>
-
-                <div class="w-full max-w-xs relative z-10 text-right">
-                    
-                    <h2 class="text-[32px] font-normal text-gray-700 mb-1 leading-tight tracking-wide">Welcome</h2>
-                    <p class="text-gray-400 text-[13px] mb-8 font-light">Log in to your account to continue</p>
-                    
-                    <form action="#" class="space-y-4">
-                        
-                        <!-- Email Input -->
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                                <i class='bx bxs-user text-gray-400 text-lg'></i>
-                            </div>
-                            <input type="email" class="w-full pl-11 pr-4 py-2.5 rounded-lg border border-gray-200 text-xs sm:text-sm focus:outline-none focus:border-brand-400 focus:ring-1 focus:ring-brand-400 transition-colors placeholder-gray-300 text-gray-600" placeholder="awesome@user.com" value="admin@sewain.co.id">
+            <div class="relative z-10">
+                <div class="bg-white/10 backdrop-blur-md border border-white/20 p-5 rounded-2xl">
+                    <p class="text-white text-xs italic mb-4">"Sistem ini sangat membantu saya untuk mecari alat produksi."</p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 bg-slate-200 rounded-full flex items-center justify-center">
+                            <i data-lucide="user" class="text-primary w-4 h-4"></i>
                         </div>
-
-                        <!-- Password Input -->
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                                <i class='bx bx-lock-alt text-gray-400 text-lg'></i>
-                            </div>
-                            <!-- 'font-mono' and 'tracking-widest' gives the visual dotted lock look nicely -->
-                            <input type="password" class="w-full pl-11 pr-4 py-2.5 rounded-lg border border-gray-200 text-xs sm:text-sm focus:outline-none focus:border-brand-400 focus:ring-1 focus:ring-brand-400 transition-colors placeholder-gray-300 text-gray-600 tracking-[0.2em] font-mono" placeholder="••••••••••••" value="password123">
+                        <div>
+                            <p class="text-white text-xs font-bold">Ibu Mizama</p>
+                            <p class="text-blue-200 text-[10px]">Penyuka Baking</p>
                         </div>
-
-                        <div class="flex justify-end w-full pb-2">
-                            <a href="#" class="text-[11px] text-gray-300 hover:text-brand-400 transition-colors underline underline-offset-2">Forgot your password?</a>
-                        </div>
-                        
-                        <div class="flex justify-end pt-2">
-                            <!-- Direct to Dashboard on click! -->
-                            <button type="button" onclick="window.location.href='{{ url('admin/dashboard') }}'" class="w-32 py-2.5 rounded-lg bg-brand-400 hover:bg-brand-500 text-white font-medium text-sm transition-all focus:outline-none shadow-[0_4px_14px_0_rgba(45,212,191,0.39)] hover:shadow-[0_6px_20px_rgba(45,212,191,0.23)]">
-                                Log In
-                            </button>
-                        </div>
-                        
-                        <div class="text-right mt-8 pt-4">
-                            <p class="text-[12px] text-gray-400 tracking-wide font-light">Don't have an account? <a href="{{ url('register') }}" class="text-gray-300 hover:text-gray-400 underline underline-offset-2 font-normal">Sign up!</a></p>
-                        </div>
-                    </form>
-
-                    <!-- Social Media Links -->
-                    <div class="flex items-center justify-end gap-4 mt-6">
-                        <a href="#" class="w-8 h-8 flex items-center justify-center text-gray-300 hover:text-brand-500 transition-colors text-xl">
-                            <i class='bx bxl-facebook-square'></i>
-                        </a>
-                        <a href="#" class="w-8 h-8 flex items-center justify-center text-gray-300 hover:text-brand-500 transition-colors text-xl">
-                            <i class='bx bxl-twitter'></i>
-                        </a>
-                        <a href="#" class="w-8 h-8 flex items-center justify-center text-gray-300 hover:text-brand-500 transition-colors text-xl">
-                            <i class='bx bxl-linkedin-square'></i>
-                        </a>
                     </div>
-
                 </div>
             </div>
         </div>
 
+        <div class="w-full md:w-[55%] p-8 md:p-12 relative">
+
+            <div class="mb-6">
+                <a href="{{ url('/') }}" class="inline-flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-primary transition-colors group">
+                    <i data-lucide="arrow-left" class="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform"></i>
+                    Kembali ke Beranda
+                </a>
+            </div>
+
+            <div class="mb-8">
+                <h1 class="text-2xl font-black text-slate-900 mb-1 tracking-tight">Selamat Datang!</h1>
+                <p class="text-slate-500 text-sm font-medium">Silakan masuk ke akun <span class="text-primary font-bold">SewaIn</span> Anda.</p>
+            </div>
+
+            <form action="{{ url('/admin/dashboard') }}" method="GET" class="space-y-5">
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-700 mb-1.5 ml-1">Alamat Email</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
+                            <i data-lucide="mail" class="w-4 h-4"></i>
+                        </span>
+                        <input type="email" name="email" required placeholder="nama@email.com" class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus-ring transition-all text-sm font-medium text-slate-900">
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex justify-between items-center mb-1.5 ml-1">
+                        <label class="block text-[11px] font-bold text-slate-700">Kata Sandi</label>
+                        <a href="#" class="text-[10px] font-bold text-aksen hover:underline">Lupa Password?</a>
+                    </div>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
+                            <i data-lucide="lock" class="w-4 h-4"></i>
+                        </span>
+                        <input type="password" name="password" required placeholder="••••••••" class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus-ring transition-all text-sm font-medium text-slate-900">
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 pt-1">
+                    <input type="checkbox" id="remember" class="w-3.5 h-3.5 rounded border-slate-300 text-primary focus:ring-primary">
+                    <label for="remember" class="text-[11px] font-medium text-slate-600">Ingat saya di perangkat ini</label>
+                </div>
+
+                <button type="submit" class="w-full bg-primary text-white py-3.5 rounded-xl font-bold text-md hover:bg-opacity-90 transition-all shadow-lg shadow-blue-900/20 active:scale-[0.98] flex items-center justify-center gap-2">
+                    Masuk Sekarang
+                </button>
+            </form>
+
+            <div class="relative my-6">
+                <div class="absolute inset-0 flex items-center"><span class="w-full border-t border-slate-100"></span></div>
+                <div class="relative flex justify-center text-[10px] uppercase font-bold text-slate-400">
+                    <span class="bg-white px-3 italic">Atau</span>
+                </div>
+            </div>
+
+            <p class="text-center text-slate-600 text-sm font-medium">
+                Belum punya akun?
+                <a href="{{ url('/register') }}" class="text-primary font-black hover:underline ml-1 uppercase tracking-tight text-xs">Daftar Sekarang</a>
+            </p>
+        </div>
     </div>
+</div>
+
+<script>
+    lucide.createIcons();
+</script>
 </body>
 </html>

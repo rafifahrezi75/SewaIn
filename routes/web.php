@@ -52,3 +52,20 @@ Route::get('/admin/pelanggan', function () {
 Route::get('/admin/pengaturan', function () {
     return view('admin.pengaturan');
 });
+
+Route::get('/owner/dashboard', function () {
+    return view('owner.dashboard');
+});
+
+Route::get('/owner/transaksi', function () {
+    return view('owner.transaksi');
+});
+
+Route::get('/owner/pengembalian', function () {
+    return view('owner.pengembalian');
+});
+
+Route::get('/owner/cetak-laporan', function () {
+    return view('owner.cetak_laporan');
+});
+

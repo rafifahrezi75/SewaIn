@@ -1,116 +1,134 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="id">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SewaIN - Register</title>
-
-    <!-- Google Fonts: Poppins -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- Tailwind CSS -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar - SewaIn</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Poppins', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            200: '#99f6e4',
-                            400: '#2dd4bf',
-                            500: '#14b8a6',
-                            600: '#0d9488',
-                            700: '#0f766e',
-                        }
-                    }
-                }
-            }
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #F1F5F9;
         }
-    </script>
 
-    <!-- Boxicons -->
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+        .text-primary { color: #1E3A8A; }
+        .bg-primary { background-color: #1E3A8A; }
+        .bg-aksen { background-color: #14B8A6; }
+        .text-aksen { color: #14B8A6; }
+
+        .focus-ring:focus {
+            border-color: #14B8A6;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.1);
+        }
+    </style>
 </head>
-<body class="bg-[#14b8a6]/10 font-sans text-gray-800 antialiased overflow-hidden">
+<body>
 
-    <!-- Full Screen Solid Background -->
-    <div class="min-h-screen bg-brand-600 flex items-center justify-center p-4 sm:p-8 relative">
+<div class="min-h-screen flex items-center justify-center p-6">
+    <div class="max-w-4xl w-full bg-white rounded-[2.5rem] shadow-2xl shadow-blue-900/10 overflow-hidden flex flex-col md:flex-row-reverse">
 
-        <!-- Login Card Container -->
-        <div class="relative z-10 w-full max-w-4xl bg-white rounded-xl shadow-2xl overflow-hidden flex flex-col md:flex-row min-h-[550px] md:min-h-[500px]">
-            <!-- Left Form Section -->
-            <div class="w-full md:w-1/2 bg-white relative z-10 flex flex-col justify-center px-8 py-10 sm:px-14 items-center xl:items-start text-left">
-                
-                <!-- SVG S-Curve Border (Spills over to the right) -->
-                <svg class="absolute top-0 bottom-0 right-0 w-24 h-full hidden md:block" style="transform: translateX(99%); margin-right: 1px;" preserveAspectRatio="none" viewBox="0 0 100 100" fill="#ffffff">
-                    <path d="M0 0 L100 0 C50 0, 50 100, 0 100 Z" />
-                </svg>
+        <div class="hidden md:flex md:w-[45%] bg-primary p-10 flex-col justify-between relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-64 h-64 bg-white/5 rounded-full -ml-32 -mt-32"></div>
+            <div class="absolute bottom-0 right-0 w-48 h-48 bg-aksen/20 rounded-full -mr-24 -mb-24 blur-3xl"></div>
 
-                <div class="w-full max-w-xs relative z-10">
-                    
-                    <h2 class="text-[32px] font-normal text-gray-700 mb-1 leading-tight tracking-wide">Register</h2>
-                    <p class="text-gray-400 text-[13px] mb-8 font-light">Create an admin account to manage SewaIN</p>
-                    
-                    <form action="#" class="space-y-4">
-                        
-                        <!-- Name Input -->
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                                <i class='bx bx-id-card text-gray-400 text-lg'></i>
-                            </div>
-                            <input type="text" class="w-full pl-11 pr-4 py-2.5 rounded-lg border border-gray-200 text-xs sm:text-sm focus:outline-none focus:border-brand-400 focus:ring-1 focus:ring-brand-400 transition-colors placeholder-gray-300 text-gray-600" placeholder="Full Name">
-                        </div>
-
-                        <!-- Email Input -->
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                                <i class='bx bxs-user text-gray-400 text-lg'></i>
-                            </div>
-                            <input type="email" class="w-full pl-11 pr-4 py-2.5 rounded-lg border border-gray-200 text-xs sm:text-sm focus:outline-none focus:border-brand-400 focus:ring-1 focus:ring-brand-400 transition-colors placeholder-gray-300 text-gray-600" placeholder="awesome@user.com">
-                        </div>
-
-                        <!-- Password Input -->
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                                <i class='bx bx-lock-alt text-gray-400 text-lg'></i>
-                            </div>
-                            <input type="password" class="w-full pl-11 pr-4 py-2.5 rounded-lg border border-gray-200 text-xs sm:text-sm focus:outline-none focus:border-brand-400 focus:ring-1 focus:ring-brand-400 transition-colors placeholder-gray-300 text-gray-600 tracking-[0.2em] font-mono" placeholder="••••••••••••">
-                        </div>
-                        
-                        <div class="flex justify-start w-full pb-2">
-                            <span class="text-[10px] text-gray-300 transition-colors">Password must be at least 8 characters</span>
-                        </div>
-                        
-                        <div class="flex justify-start pt-2">
-                            <!-- Direct to Login on click! -->
-                            <button type="button" onclick="window.location.href='{{ url('login') }}'" class="w-32 py-2.5 rounded-lg bg-brand-400 hover:bg-brand-500 text-white font-medium text-sm transition-all focus:outline-none shadow-[0_4px_14px_0_rgba(45,212,191,0.39)] hover:shadow-[0_6px_20px_rgba(45,212,191,0.23)]">
-                                Sign Up
-                            </button>
-                        </div>
-                        
-                        <div class="text-left mt-6 pt-2">
-                            <p class="text-[12px] text-gray-400 tracking-wide font-light">Already have an account? <a href="{{ url('login') }}" class="text-gray-300 hover:text-brand-400 underline underline-offset-2 font-normal">Log in!</a></p>
-                        </div>
-                    </form>
-
+            <div class="relative z-10">
+                <div class="flex items-center gap-2 mb-8">
+                    <div class="w-9 h-9 bg-white rounded-xl flex items-center justify-center shadow-lg">
+                        <i data-lucide="layers" class="text-primary w-5 h-5"></i>
+                    </div>
+                    <span class="text-xl font-bold text-white tracking-tighter">SewaIn.</span>
                 </div>
+                <h2 class="text-3xl font-bold text-white leading-tight mb-5">
+                    Mulai Perjalanan <br><span class="text-aksen">Bisnismu Bersama Kami.</span>
+                </h2>
+                <ul class="space-y-3 text-blue-100/90 text-md">
+                    <li class="flex items-center gap-3"><i data-lucide="check-circle" class="text-aksen w-4 h-4"></i> Akses 100+ Alat Produksi</li>
+                    <li class="flex items-center gap-3"><i data-lucide="check-circle" class="text-aksen w-4 h-4"></i> Cek Stok Alat Produksi</li>
+                    <li class="flex items-center gap-3"><i data-lucide="check-circle" class="text-aksen w-4 h-4"></i> Proses Peminjaman mudah dan cepat</li>
+                </ul>
             </div>
 
-        <!-- Right Image Section (Hidden on Mobile) -->
-            <div class="w-full md:w-1/2 relative hidden md:block bg-brand-500">
-                <!-- Image -> Industrial equipment for variation -->
-                <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');"></div>
-                <!-- Teal Overlay -->
-                <div class="absolute inset-0 bg-brand-500 opacity-30"></div>
-                <div class="absolute inset-0 bg-gradient-to-t from-brand-700 opacity-80 to-transparent"></div>
+            <div class="relative z-10 text-center p-3 bg-white/5 border border-white/10 rounded-xl">
+                <p class="text-white/80 text-[10px] font-medium uppercase tracking-widest">Wujudkan Impian Bisnismu Di SewaIn</p>
             </div>
         </div>
 
+        <div class="w-full md:w-[55%] p-8 md:p-12">
+            <div class="mb-6">
+                <a href="{{ url('/') }}" class="inline-flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-primary transition-colors group">
+                    <i data-lucide="arrow-left" class="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform"></i>
+                    Kembali ke Beranda
+                </a>
+            </div>
+
+            <div class="mb-8">
+                <h1 class="text-2xl font-black text-slate-900 mb-1 tracking-tight">Buat Akun Baru</h1>
+                <p class="text-slate-500 text-sm font-medium">Lengkapi data untuk mulai menyewa.</p>
+            </div>
+
+            <form action="{{ url('/login') }}" method="GET" class="space-y-4">
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-700 mb-1.5 ml-1">Nama Lengkap</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
+                            <i data-lucide="user" class="w-4 h-4"></i>
+                        </span>
+                        <input type="text" name="nama" required placeholder="Andi Pratama" class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus-ring transition-all text-sm font-medium text-slate-900">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-700 mb-1.5 ml-1">Alamat Email</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
+                            <i data-lucide="mail" class="w-4 h-4"></i>
+                        </span>
+                        <input type="email" name="email" required placeholder="nama@email.com" class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus-ring transition-all text-sm font-medium text-slate-900">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-700 mb-1.5 ml-1">Kata Sandi</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
+                            <i data-lucide="lock" class="w-4 h-4"></i>
+                        </span>
+                        <input type="password" name="password" required placeholder="••••••••" class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus-ring transition-all text-sm font-medium text-slate-900">
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-2 pt-1">
+                    <input type="checkbox" name="terms" required id="terms" class="mt-1 w-3.5 h-3.5 rounded border-slate-300 text-primary focus:ring-primary">
+                    <label for="terms" class="text-[10px] font-medium text-slate-500 leading-tight">
+                        Saya setuju dengan <a href="#" class="text-primary font-bold hover:underline">Syarat & Ketentuan</a> serta <a href="#" class="text-primary font-bold hover:underline">Kebijakan Privasi</a> SewaIn.
+                    </label>
+                </div>
+
+                <button type="submit" class="w-full bg-primary text-white py-3.5 rounded-xl font-bold text-md hover:bg-opacity-90 transition-all shadow-lg shadow-blue-900/20 active:scale-[0.98] flex items-center justify-center gap-2">
+                    Daftar Sekarang
+                </button>
+            </form>
+
+            <div class="relative my-5">
+                <div class="absolute inset-0 flex items-center"><span class="w-full border-t border-slate-100"></span></div>
+                <div class="relative flex justify-center text-[10px] uppercase font-bold text-slate-400">
+                    <span class="bg-white px-3 italic">Sudah punya akun?</span>
+                </div>
+            </div>
+
+            <a href="{{ url('/login') }}" class="w-full flex items-center justify-center gap-2 border-2 border-slate-100 text-slate-600 py-3 rounded-xl font-bold hover:bg-slate-50 transition-all tracking-tight uppercase text-[10px]">
+                Kembali ke Halaman Masuk
+            </a>
+        </div>
     </div>
+</div>
+
+<script>
+    lucide.createIcons();
+</script>
 </body>
 </html>
