@@ -10,7 +10,7 @@
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-sm font-medium text-gray-500">Menunggu Diambil</p>
-                <h3 class="mt-2 text-3xl font-bold text-gray-800">5</h3>
+                <h3 class="mt-2 text-3xl font-bold text-gray-800">{{ $pendingPesanan }}</h3>
             </div>
             <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-50 text-2xl text-orange-500 shadow-inner">
                 <i class='bx bx-time-five'></i>
@@ -26,7 +26,7 @@
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-sm font-medium text-gray-500">Alat Sedang Disewa</p>
-                <h3 class="mt-2 text-3xl font-bold text-gray-800">12</h3>
+                <h3 class="mt-2 text-3xl font-bold text-gray-800">{{ $penyewaanAktif }}</h3>
             </div>
             <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-50 text-2xl text-brand-600 shadow-inner">
                 <i class='bx bx-shopping-bag'></i>
@@ -42,7 +42,7 @@
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-sm font-medium text-gray-500">Belum Dikembalikan</p>
-                <h3 class="mt-2 text-3xl font-bold text-red-600">2</h3>
+                <h3 class="mt-2 text-3xl font-bold text-red-600">{{ $terlambat }}</h3>
             </div>
             <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-red-50 text-red-500 shadow-md">
                 <i class='bx bx-error-circle'></i>
@@ -59,7 +59,7 @@
         <div class="flex items-center justify-between">
             <div>
                 <p class="text-sm font-medium text-gray-500">Total UMKM</p>
-                <h3 class="mt-2 text-3xl font-bold text-gray-800">24</h3>
+                <h3 class="mt-2 text-3xl font-bold text-gray-800">{{ $totalUmkm }}</h3>
             </div>
             <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-2xl text-blue-500 shadow-inner">
                 <i class='bx bx-group'></i>
@@ -116,69 +116,46 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
+                    @forelse($recentTransactions as $transaksi)
                     <tr class="hover:bg-gray-50/50 transition-colors">
                         <td class="px-4 py-3">
                             <div class="font-medium text-gray-900 border-b border-gray-100 pb-0.5 mb-0.5 inline-block">
-                                INV-0012
+                                INV-{{ str_pad($transaksi->idsewa, 4, '0', STR_PAD_LEFT) }}
                             </div>
-                            <div class="text-xs">UMKM Sejahtera</div>
+                            <div class="text-xs">{{ $transaksi->user->nama ?? 'Unknown User' }}</div>
                         </td>
                         <td class="px-4 py-3 text-xs">
-                            <i class='bx bx-calendar mr-1 text-gray-400'></i> 12 Mei 2026
+                            <i class='bx bx-calendar mr-1 text-gray-400'></i> {{ \Carbon\Carbon::parse($transaksi->tanggal_mulai)->format('d M Y') }}
                         </td>
                         <td class="px-4 py-3">
                             <span class="inline-flex items-center gap-1 rounded bg-gray-100 px-2 py-1 text-[10px] font-semibold text-gray-600 uppercase">
-                                <i class='bx bx-truck'></i> Diantar
+                                @if($transaksi->metode_pengiriman == 'diantar')
+                                    <i class='bx bx-truck'></i> Diantar
+                                @else
+                                    <i class='bx bx-store'></i> Ambil Sendiri
+                                @endif
                             </span>
                         </td>
                         <td class="px-4 py-3 text-right">
-                            <span class="inline-block rounded-full bg-blue-100 px-2.5 py-0.5 text-[10px] font-semibold uppercase text-blue-600">
-                                disewa
+                            @php
+                                $statusClass = match(strtolower($transaksi->status)) {
+                                    'pending' => 'bg-orange-100 text-orange-600',
+                                    'disewa' => 'bg-blue-100 text-blue-600',
+                                    'selesai' => 'bg-green-100 text-green-600',
+                                    'batal' => 'bg-red-100 text-red-600',
+                                    default => 'bg-gray-100 text-gray-600'
+                                };
+                            @endphp
+                            <span class="inline-block rounded-full {{ $statusClass }} px-2.5 py-0.5 text-[10px] font-semibold uppercase">
+                                {{ $transaksi->status }}
                             </span>
                         </td>
                     </tr>
-                    <tr class="hover:bg-gray-50/50 transition-colors">
-                        <td class="px-4 py-3">
-                            <div class="font-medium text-gray-900 border-b border-gray-100 pb-0.5 mb-0.5 inline-block">
-                                INV-0011
-                            </div>
-                            <div class="text-xs">Toko Sumber Rejeki</div>
-                        </td>
-                        <td class="px-4 py-3 text-xs">
-                            <i class='bx bx-calendar mr-1 text-gray-400'></i> 10 Mei 2026
-                        </td>
-                        <td class="px-4 py-3">
-                            <span class="inline-flex items-center gap-1 rounded bg-gray-100 px-2 py-1 text-[10px] font-semibold text-gray-600 uppercase">
-                                <i class='bx bx-store'></i> Ambil Sendiri
-                            </span>
-                        </td>
-                        <td class="px-4 py-3 text-right">
-                            <span class="inline-block rounded-full bg-orange-100 px-2.5 py-0.5 text-[10px] font-semibold uppercase text-orange-600">
-                                pending
-                            </span>
-                        </td>
+                    @empty
+                    <tr>
+                        <td colspan="4" class="px-4 py-8 text-center text-gray-500">Belum ada transaksi terbaru.</td>
                     </tr>
-                    <tr class="hover:bg-gray-50/50 transition-colors">
-                        <td class="px-4 py-3">
-                            <div class="font-medium text-gray-900 border-b border-gray-100 pb-0.5 mb-0.5 inline-block">
-                                INV-0010
-                            </div>
-                            <div class="text-xs">Kedai Kopi ABC</div>
-                        </td>
-                        <td class="px-4 py-3 text-xs">
-                            <i class='bx bx-calendar mr-1 text-gray-400'></i> 05 Mei 2026
-                        </td>
-                        <td class="px-4 py-3">
-                            <span class="inline-flex items-center gap-1 rounded bg-gray-100 px-2 py-1 text-[10px] font-semibold text-gray-600 uppercase">
-                                <i class='bx bx-truck'></i> Diantar
-                            </span>
-                        </td>
-                        <td class="px-4 py-3 text-right">
-                            <span class="inline-block rounded-full bg-green-100 px-2.5 py-0.5 text-[10px] font-semibold uppercase text-green-600">
-                                selesai
-                            </span>
-                        </td>
-                    </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
@@ -194,23 +171,27 @@
             <p class="text-brand-200 text-sm mb-6">Ringkasan kondisi stok di gudang</p>
 
             <div class="space-y-4">
+                @php
+                    $percentTersedia = $totalStokAlat > 0 ? round(($totalStokAlat / ($totalStokAlat + $stokDisewa)) * 100) : 0;
+                    $percentDisewa = $totalStokAlat > 0 || $stokDisewa > 0 ? 100 - $percentTersedia : 0;
+                @endphp
                 <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
                     <div class="flex justify-between items-center mb-1">
                         <span class="text-sm font-medium">Tersedia Digudang</span>
-                        <span class="text-lg font-bold">150 <span class="text-xs font-normal">unit</span></span>
+                        <span class="text-lg font-bold">{{ $totalStokAlat }} <span class="text-xs font-normal">unit</span></span>
                     </div>
                     <div class="w-full bg-brand-600 rounded-full h-1.5 mt-2">
-                        <div class="bg-white h-1.5 rounded-full" style="width: 75%"></div>
+                        <div class="bg-white h-1.5 rounded-full" style="width: {{ $percentTersedia }}%"></div>
                     </div>
                 </div>
 
                 <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
                     <div class="flex justify-between items-center mb-1">
                         <span class="text-sm font-medium">Sedang Disewa</span>
-                        <span class="text-lg font-bold">50 <span class="text-xs font-normal">unit</span></span>
+                        <span class="text-lg font-bold">{{ $stokDisewa }} <span class="text-xs font-normal">unit</span></span>
                     </div>
                     <div class="w-full bg-brand-600 rounded-full h-1.5 mt-2">
-                        <div class="bg-[#f9db72] h-1.5 rounded-full" style="width: 25%"></div>
+                        <div class="bg-[#f9db72] h-1.5 rounded-full" style="width: {{ $percentDisewa }}%"></div>
                     </div>
                 </div>
             </div>
@@ -227,7 +208,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     const ctx = document.getElementById('rentalsChart').getContext('2d');
-    const data = [12, 19, 15, 25, 22, 30, 28, 35, 40, 38, 45, 50]; // Dummy data
+    const data = @json($chartRentalsData);
     
     let gradient = ctx.createLinearGradient(0, 0, 0, 300);
     gradient.addColorStop(0, 'rgba(30, 58, 138, 0.4)'); // brand-500
@@ -310,8 +291,8 @@
         }
     });
 
-    const labels = ['Kamera', 'Lensa', 'Lighting', 'Audio', 'Aksesoris'];
-    const dataPie = [35, 20, 15, 10, 20]; // Dummy data
+    const labels = @json($pieLabels);
+    const dataPie = @json($pieData);
 
     const ctxPie = document.getElementById('myPieChart').getContext('2d');
 

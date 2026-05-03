@@ -11,28 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Poppins', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            200: '#bfdbfe', 
-                            400: '#60a5fa', 
-                            500: '#1E3A8A', 
-                            600: '#172554', 
-                            700: '#1e3a8a', 
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-
+    @vite('resources/css/app.css')
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
@@ -92,10 +71,13 @@
 
             <!-- Sidebar Footer -->
             <div class="p-4" :class="sidebarOpen ? '' : 'md:px-2'">
-                <a href="#" class="flex items-center gap-3 rounded-xl px-4 py-3 font-medium text-white transition-all hover:bg-brand-600 focus:outline-none" :class="sidebarOpen ? 'justify-start' : 'md:justify-center px-0'">
-                    <i class='bx bx-log-out text-xl shrink-0 opacity-80'></i>
-                    <span x-show="sidebarOpen" class="whitespace-nowrap">Logout</span>
-                </a>
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="w-full flex items-center gap-3 rounded-xl px-4 py-3 font-medium text-white transition-all hover:bg-brand-600 focus:outline-none" :class="sidebarOpen ? 'justify-start' : 'md:justify-center px-0'">
+                        <i class='bx bx-log-out text-xl shrink-0 opacity-80'></i>
+                        <span x-show="sidebarOpen" class="whitespace-nowrap">Logout</span>
+                    </button>
+                </form>
             </div>
         </aside>
 
@@ -121,8 +103,8 @@
                     
                     <div class="flex items-center gap-3 pl-3 sm:pl-5 relative before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-8 before:w-px before:bg-brand-400">
                         <div class="hidden sm:flex flex-col text-right justify-center">
-                            <span class="text-sm font-semibold leading-tight">Owner</span>
-                            <span class="text-[10px] text-brand-400 font-medium mt-0.5 uppercase tracking-wider">OWNER</span>
+                            <span class="text-sm font-semibold leading-tight">{{ auth()->user()->nama ?? 'Owner' }}</span>
+                            <span class="text-[10px] text-brand-400 font-medium mt-0.5 uppercase tracking-wider">{{ auth()->user()->role ?? 'OWNER' }}</span>
                         </div>
                         <button class="h-9 w-9 overflow-hidden rounded-full bg-white/10 hover:bg-white/20 border border-white/20 transition flex items-center justify-center focus:outline-none">
                             <i class='bx bx-user text-xl text-white'></i>

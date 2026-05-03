@@ -22,50 +22,37 @@
                         <th scope="col" class="px-6 py-4 font-semibold tracking-wider text-center w-28">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100 text-gray-700 border-b border-gray-100">
+                    @forelse($kategoriList as $index => $item)
                     <tr class="hover:bg-gray-50 transition-colors">
-                        <td class="px-6 py-4 font-medium text-gray-900 text-center">1</td>
+                        <td class="px-6 py-4 font-medium text-gray-900 text-center">{{ $kategoriList->firstItem() + $index }}</td>
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
                                 <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg shadow-sm bg-indigo-50 text-indigo-600">
-                                    <i class='bx bx-laptop text-xl'></i>
+                                    <i class='bx {{ $item->icon ?? 'bx-layer' }} text-xl'></i>
                                 </div>
-                                <span class="font-semibold text-gray-800">Elektronik</span>
+                                <span class="font-semibold text-gray-800">{{ $item->kategori }}</span>
                             </div>
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex items-center justify-center gap-2">
-                                <button type="button" @click="editData = { id: '1', nama: 'Elektronik', icon: 'bx-laptop' }; editModalOpen = true" class="rounded-lg p-2 text-blue-500 bg-blue-50 hover:bg-blue-100 hover:text-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1" title="Edit">
+                                <button type="button" @click="editData = { id: '{{ $item->id_kategori }}', nama: '{{ addslashes($item->kategori) }}', icon: '{{ addslashes($item->icon) }}' }; editModalOpen = true" class="rounded-lg p-2 text-blue-500 bg-blue-50 hover:bg-blue-100 hover:text-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1" title="Edit">
                                     <i class='bx bx-edit text-xl'></i>
                                 </button>
-                                <button type="button" class="rounded-lg p-2 text-red-500 bg-red-50 hover:bg-red-100 hover:text-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1" title="Hapus">
-                                    <i class='bx bx-trash text-xl'></i>
-                                </button>
+                                <form action="{{ url('admin/kategori/' . $item->id_kategori) }}" method="POST" class="inline-block" onsubmit="return confirmDelete(event, this)">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="rounded-lg p-2 text-red-500 bg-red-50 hover:bg-red-100 hover:text-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1" title="Hapus">
+                                        <i class='bx bx-trash text-xl'></i>
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>
-                    
-                    <tr class="hover:bg-gray-50 transition-colors">
-                        <td class="px-6 py-4 font-medium text-gray-900 text-center">2</td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-3">
-                                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg shadow-sm bg-orange-50 text-orange-600">
-                                    <i class='bx bx-car text-xl'></i>
-                                </div>
-                                <span class="font-semibold text-gray-800">Kendaraan</span>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center justify-center gap-2">
-                                <button type="button" @click="editData = { id: '2', nama: 'Kendaraan', icon: 'bx-car' }; editModalOpen = true" class="rounded-lg p-2 text-blue-500 bg-blue-50 hover:bg-blue-100 hover:text-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1" title="Edit">
-                                    <i class='bx bx-edit text-xl'></i>
-                                </button>
-                                <button type="button" class="rounded-lg p-2 text-red-500 bg-red-50 hover:bg-red-100 hover:text-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1" title="Hapus">
-                                    <i class='bx bx-trash text-xl'></i>
-                                </button>
-                            </div>
-                        </td>
+                    @empty
+                    <tr>
+                        <td colspan="3" class="px-6 py-8 text-center text-gray-500">Belum ada data kategori.</td>
                     </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
@@ -73,13 +60,22 @@
         <!-- Pagination -->
         <div class="bg-gray-50/50 p-4 sm:flex sm:items-center sm:justify-between border-t border-gray-100 rounded-b-2xl">
             <p class="text-sm text-gray-500">
-                Menampilkan <span class="font-medium text-gray-700">1</span> 
-                sampai <span class="font-medium text-gray-700">2</span> 
-                dari total <span class="font-medium text-gray-700">2</span> kategori
+                Menampilkan <span class="font-medium text-gray-700">{{ $kategoriList->firstItem() ?? 0 }}</span> 
+                sampai <span class="font-medium text-gray-700">{{ $kategoriList->lastItem() ?? 0 }}</span> 
+                dari total <span class="font-medium text-gray-700">{{ $kategoriList->total() }}</span> kategori
             </p>
             <div class="mt-4 sm:mt-0 flex gap-2">
-                <button class="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-400 cursor-not-allowed focus:outline-none" disabled>Sebelumnya</button>
-                <button class="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-400 cursor-not-allowed focus:outline-none" disabled>Selanjutnya</button>
+                @if ($kategoriList->onFirstPage())
+                    <button class="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-400 cursor-not-allowed focus:outline-none" disabled>Sebelumnya</button>
+                @else
+                    <a href="{{ $kategoriList->previousPageUrl() }}" class="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none transition-colors">Sebelumnya</a>
+                @endif
+
+                @if ($kategoriList->hasMorePages())
+                    <a href="{{ $kategoriList->nextPageUrl() }}" class="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none transition-colors">Selanjutnya</a>
+                @else
+                    <button class="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-400 cursor-not-allowed focus:outline-none" disabled>Selanjutnya</button>
+                @endif
             </div>
         </div>
     </div>
@@ -115,7 +111,8 @@
                 </button>
             </div>
             
-            <form action="" method="POST">
+            <form action="{{ url('admin/kategori') }}" method="POST">
+                @csrf
                 <div class="space-y-4 px-6 py-4">
                     
                     <div>
@@ -173,7 +170,9 @@
                 </button>
             </div>
 
-            <form action="" method="POST">
+            <form action="{{ url('admin/kategori/update') }}" method="POST">
+                @csrf
+                @method('PUT')
                 <input type="hidden" name="idkategori" x-model="editData.id">
                 <div class="space-y-4 px-6 py-4">
 
@@ -201,4 +200,31 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    function confirmDelete(event, form) {
+        event.preventDefault();
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Kategori ini akan dihapus secara permanen!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#9ca3af',
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: 'Batal',
+            customClass: {
+                popup: 'rounded-3xl',
+                title: 'font-sans text-gray-800',
+                htmlContainer: 'font-sans text-sm text-gray-500'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    }
+</script>
 @endsection

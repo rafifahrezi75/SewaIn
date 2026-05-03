@@ -70,14 +70,25 @@
                 <p class="text-slate-500 text-sm font-medium">Lengkapi data untuk mulai menyewa.</p>
             </div>
 
-            <form action="{{ url('/login') }}" method="GET" class="space-y-4">
+            @if ($errors->any())
+                <div class="mb-5 p-3 bg-red-50 text-red-600 text-xs rounded-xl border border-red-100 font-medium">
+                    <ul class="list-disc pl-4 space-y-1">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <form action="{{ route('register') }}" method="POST" class="space-y-4">
+                @csrf
                 <div>
                     <label class="block text-[11px] font-bold text-slate-700 mb-1.5 ml-1">Nama Lengkap</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
                             <i data-lucide="user" class="w-4 h-4"></i>
                         </span>
-                        <input type="text" name="nama" required placeholder="Andi Pratama" class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus-ring transition-all text-sm font-medium text-slate-900">
+                        <input type="text" name="nama" value="{{ old('nama') }}" required placeholder="Andi Pratama" class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus-ring transition-all text-sm font-medium text-slate-900">
                     </div>
                 </div>
 
@@ -87,7 +98,7 @@
                         <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
                             <i data-lucide="mail" class="w-4 h-4"></i>
                         </span>
-                        <input type="email" name="email" required placeholder="nama@email.com" class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus-ring transition-all text-sm font-medium text-slate-900">
+                        <input type="email" name="email" value="{{ old('email') }}" required placeholder="nama@email.com" class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus-ring transition-all text-sm font-medium text-slate-900">
                     </div>
                 </div>
 
@@ -98,6 +109,16 @@
                             <i data-lucide="lock" class="w-4 h-4"></i>
                         </span>
                         <input type="password" name="password" required placeholder="••••••••" class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus-ring transition-all text-sm font-medium text-slate-900">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-[11px] font-bold text-slate-700 mb-1.5 ml-1">Konfirmasi Kata Sandi</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
+                            <i data-lucide="lock" class="w-4 h-4"></i>
+                        </span>
+                        <input type="password" name="password_confirmation" required placeholder="••••••••" class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus-ring transition-all text-sm font-medium text-slate-900">
                     </div>
                 </div>
 

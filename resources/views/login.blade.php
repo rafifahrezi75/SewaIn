@@ -80,7 +80,18 @@
                 <p class="text-slate-500 text-sm font-medium">Silakan masuk ke akun <span class="text-primary font-bold">SewaIn</span> Anda.</p>
             </div>
 
-            <form action="{{ url('/admin/dashboard') }}" method="GET" class="space-y-5">
+            @if ($errors->any())
+                <div class="mb-5 p-3 bg-red-50 text-red-600 text-xs rounded-xl border border-red-100 font-medium">
+                    <ul class="list-disc pl-4 space-y-1">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <form action="{{ route('login') }}" method="POST" class="space-y-5">
+                @csrf
                 <div>
                     <label class="block text-[11px] font-bold text-slate-700 mb-1.5 ml-1">Alamat Email</label>
                     <div class="relative">

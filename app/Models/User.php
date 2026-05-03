@@ -12,15 +12,20 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    protected $table = 'user';
+    protected $primaryKey = 'id_user';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'nama',
         'email',
+        'notelp',
         'password',
+        'role',
     ];
 
     /**
@@ -30,7 +35,6 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'remember_token',
     ];
 
     /**
@@ -39,7 +43,22 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Memberitahu Laravel Auth nama kolom primary key untuk session.
+     */
+    public function getAuthIdentifierName(): string
+    {
+        return 'id_user';
+    }
+
+    /**
+     * Memberitahu Laravel Auth nilai primary key user saat ini.
+     */
+    public function getAuthIdentifier(): mixed
+    {
+        return $this->id_user;
+    }
 }
