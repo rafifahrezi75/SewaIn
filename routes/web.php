@@ -6,6 +6,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\AlatController;
+use App\Http\Controllers\PelangganController;
+use App\Http\Controllers\OwnerController;
+use App\Http\Controllers\OwnerTransaksiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,13 +48,14 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     Route::get('/admin/transaksi', function () { return view('admin.transaksi'); });
     Route::get('/admin/pengembalian', function () { return view('admin.pengembalian'); });
-    Route::get('/admin/pelanggan', function () { return view('admin.pelanggan'); });
+    Route::get('/admin/pelanggan', [PelangganController::class, 'index'])->name('admin.pelanggan');
     Route::get('/admin/pengaturan', function () { return view('admin.pengaturan'); });
 });
 
 Route::middleware(['auth', 'role:owner'])->group(function () {
-    Route::get('/owner/dashboard', function () { return view('owner.dashboard'); });
-    Route::get('/owner/transaksi', function () { return view('owner.transaksi'); });
+    Route::get('/owner/dashboard', [OwnerController::class, 'dashboard'])->name('owner.dashboard');
+    Route::get('/owner/transaksi', [OwnerTransaksiController::class, 'transaksi'])->name('owner.transaksi');
+    Route::post('/owner/transaksi/update-status', [OwnerTransaksiController::class, 'updateStatusTransaksi'])->name('owner.transaksi.update');
     Route::get('/owner/pengembalian', function () { return view('owner.pengembalian'); });
     Route::get('/owner/cetak-laporan', function () { return view('owner.cetak_laporan'); });
 });

@@ -3,16 +3,45 @@
 @section('title', 'Daftar Transaksi')
 
 @section('content')
-<div x-data="{ statusModalOpen: false, statusData: { id: '', current: '' } }">
+<div x-data="{ statusModalOpen: false, statusData: { id: '', current: '' }, filterModalOpen: false }">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
         <h2 class="text-2xl font-bold text-gray-800">Daftar Transaksi</h2>
         
-        <form method="GET" action="#" class="flex items-center gap-3">
-            <div class="relative">
+        <form method="GET" action="{{ route('owner.transaksi') }}" class="flex flex-wrap items-center gap-3">
+            @if(request()->has('status'))
+                @foreach((array)request('status') as $s)
+                    <input type="hidden" name="status[]" value="{{ $s }}">
+                @endforeach
+            @endif
+            @if(request()->has('metode_pengiriman'))
+                @foreach((array)request('metode_pengiriman') as $m)
+                    <input type="hidden" name="metode_pengiriman[]" value="{{ $m }}">
+                @endforeach
+            @endif
+            @if(request()->filled('tgl_awal'))
+                <input type="hidden" name="tgl_awal" value="{{ request('tgl_awal') }}">
+            @endif
+            @if(request()->filled('tgl_akhir'))
+                <input type="hidden" name="tgl_akhir" value="{{ request('tgl_akhir') }}">
+            @endif
+
+            <div class="relative w-full sm:w-auto flex-1 sm:flex-none">
                 <i class='bx bx-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg'></i>
-                <input type="text" name="search" placeholder="Cari invoice atau UMKM..." class="pl-10 pr-4 py-2 w-full sm:w-64 rounded-xl border border-gray-200 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 transition-colors">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari invoice atau pelanggan..." class="pl-10 pr-4 py-2 w-full sm:w-48 xl:w-64 rounded-xl border border-gray-200 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 transition-colors">
             </div>
-            <button type="submit" class="bg-brand-500 text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-brand-600 transition-colors">Cari</button>
+            
+            <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                @if(request()->filled('search') || request()->has('status') || request()->has('metode_pengiriman') || request()->filled('tgl_awal') || request()->filled('tgl_akhir'))
+                <a href="{{ route('owner.transaksi') }}" class="rounded-xl bg-red-50 text-red-600 px-4 py-2 text-sm font-medium hover:bg-red-100 transition-colors focus:outline-none border border-red-100 flex items-center justify-center">
+                    Reset
+                </a>
+                @endif
+                <button type="button" @click="filterModalOpen = true" class="rounded-xl bg-white border border-gray-200 text-gray-600 px-4 py-2 text-sm font-medium hover:bg-gray-50 transition-colors focus:outline-none flex items-center gap-2">
+                    <i class='bx bx-slider-alt text-lg'></i>
+                    <span class="hidden sm:inline">Filter</span>
+                </button>
+                <button type="submit" class="rounded-xl bg-brand-500 text-white px-4 py-2 text-sm font-medium hover:bg-brand-600 transition-colors focus:outline-none">Cari</button>
+            </div>
         </form>
     </div>
 
@@ -32,37 +61,55 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100 text-gray-700">
-                    <!-- Dummy Data 1 -->
+                    @forelse($transaksi as $trx)
                     <tr class="hover:bg-gray-50/50 transition-colors">
                         <td class="px-6 py-4">
-                            <span class="block font-medium text-gray-900 border-b border-gray-100 pb-1 mb-1">#0001</span>
-                            <span class="text-xs text-gray-500">UMKM Maju Jaya</span>
+                            <span class="block font-medium text-gray-900 border-b border-gray-100 pb-1 mb-1">INV-{{ str_pad($trx->idsewa, 4, '0', STR_PAD_LEFT) }}</span>
+                            <span class="text-xs text-gray-500">{{ $trx->user->nama ?? 'Unknown' }}</span>
                         </td>
                         <td class="px-6 py-4 text-xs">
-                            <div class="font-medium text-gray-700">2x Kamera DSLR</div>
-                            <div class="text-gray-400">+1 Item lainnya</div>
+                            @if($trx->details && $trx->details->count() > 0)
+                                <div class="font-medium text-gray-700">{{ $trx->details[0]->jumlah }}x {{ $trx->details[0]->alat->nama_alat ?? 'Alat' }}</div>
+                                @if($trx->details->count() > 1)
+                                    <div class="text-gray-400">+{{ $trx->details->count() - 1 }} Item lainnya</div>
+                                @endif
+                            @else
+                                <div class="text-gray-400">Tidak ada item</div>
+                            @endif
                         </td>
                         <td class="px-6 py-4 text-xs">
-                            <span class="block whitespace-nowrap"><i class='bx bx-calendar mr-1'></i>10 Mei 26 - 12 Mei 26</span>
-                            <span class="block text-gray-400 mt-1">(2 Hari)</span>
+                            <span class="block whitespace-nowrap"><i class='bx bx-calendar mr-1'></i>{{ \Carbon\Carbon::parse($trx->tanggal_mulai)->format('d M y') }} - {{ \Carbon\Carbon::parse($trx->tanggal_selesai)->format('d M y') }}</span>
+                            <span class="block text-gray-400 mt-1">({{ $trx->durasi }} Hari)</span>
                         </td>
                         <td class="px-6 py-4">
                             <span class="inline-flex items-center gap-1 rounded bg-gray-100 px-2 py-1 text-[10px] font-semibold text-gray-600 uppercase">
-                                <i class='bx bx-truck'></i> Diantar
+                                <i class='bx {{ strtolower($trx->metode_pengiriman) == 'diantar' ? 'bx-truck' : 'bx-store' }}'></i> {{ $trx->metode_pengiriman }}
                             </span>
                         </td>
                         <td class="px-6 py-4 font-medium text-gray-900">
-                            Rp 250.000
-                            <span class="text-[10px] items-center text-gray-500 block font-normal">(inc. Ongkir)</span>
+                            Rp {{ number_format($trx->total_biaya, 0, ',', '.') }}
+                            @if($trx->ongkir > 0)
+                                <span class="text-[10px] items-center text-gray-500 block font-normal">(inc. Ongkir Rp {{ number_format($trx->ongkir, 0, ',', '.') }})</span>
+                            @endif
                         </td>
                         <td class="px-6 py-4">
-                            <span class="inline-flex items-center gap-1 rounded-full bg-blue-100 px-2.5 py-1 text-xs font-semibold text-blue-600 capitalize">
-                                disewa
+                            @php
+                                $statusColors = [
+                                    'pending' => 'bg-orange-100 text-orange-600',
+                                    'disewa' => 'bg-blue-100 text-blue-600',
+                                    'selesai' => 'bg-green-100 text-green-600',
+                                    'dibatalkan' => 'bg-red-100 text-red-600',
+                                    'terlambat' => 'bg-red-100 text-red-600',
+                                ];
+                                $colorClass = $statusColors[strtolower($trx->status)] ?? 'bg-gray-100 text-gray-600';
+                            @endphp
+                            <span class="inline-flex items-center gap-1 rounded-full {{ $colorClass }} px-2.5 py-1 text-xs font-semibold capitalize">
+                                {{ $trx->status }}
                             </span>
                         </td>
                         <td class="px-6 py-4 text-right">
                             <div class="flex items-center justify-end gap-2">
-                                <button @click="statusData = { id: '1', current: 'disewa' }; statusModalOpen = true" 
+                                <button @click="statusData = { id: '{{ $trx->idsewa }}', current: '{{ $trx->status }}' }; statusModalOpen = true" 
                                     class="rounded-lg bg-brand-50 text-brand-600 px-3 py-1.5 text-xs font-semibold hover:bg-brand-100 transition-colors focus:outline-none border border-brand-100">
                                     Ubah Status
                                 </button>
@@ -72,96 +119,23 @@
                             </div>
                         </td>
                     </tr>
-                    
-                    <!-- Dummy Data 2 -->
-                    <tr class="hover:bg-gray-50/50 transition-colors">
-                        <td class="px-6 py-4">
-                            <span class="block font-medium text-gray-900 border-b border-gray-100 pb-1 mb-1">#0002</span>
-                            <span class="text-xs text-gray-500">Toko Berkah</span>
-                        </td>
-                        <td class="px-6 py-4 text-xs">
-                            <div class="font-medium text-gray-700">1x Proyektor Mini</div>
-                        </td>
-                        <td class="px-6 py-4 text-xs">
-                            <span class="block whitespace-nowrap"><i class='bx bx-calendar mr-1'></i>14 Mei 26 - 15 Mei 26</span>
-                            <span class="block text-gray-400 mt-1">(1 Hari)</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="inline-flex items-center gap-1 rounded bg-gray-100 px-2 py-1 text-[10px] font-semibold text-gray-600 uppercase">
-                                <i class='bx bx-store'></i> Ambil Sendiri
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 font-medium text-gray-900">
-                            Rp 75.000
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="inline-flex items-center gap-1 rounded-full bg-orange-100 px-2.5 py-1 text-xs font-semibold text-orange-600 capitalize">
-                                pending
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 text-right">
-                            <div class="flex items-center justify-end gap-2">
-                                <button @click="statusData = { id: '2', current: 'pending' }; statusModalOpen = true" 
-                                    class="rounded-lg bg-brand-50 text-brand-600 px-3 py-1.5 text-xs font-semibold hover:bg-brand-100 transition-colors focus:outline-none border border-brand-100">
-                                    Ubah Status
-                                </button>
-                                <a href="#" class="rounded-lg bg-gray-50 text-gray-600 px-3 py-1.5 text-xs font-medium hover:bg-gray-100 transition-colors focus:outline-none border border-gray-200" title="Detail">
-                                    <i class='bx bx-show'></i>
-                                </a>
+                    @empty
+                    <tr>
+                        <td colspan="7" class="px-6 py-8 text-center text-gray-500">
+                            <div class="flex flex-col items-center justify-center">
+                                <i class='bx bx-search text-4xl mb-2 text-gray-300'></i>
+                                <p>Tidak ada data transaksi ditemukan.</p>
                             </div>
                         </td>
                     </tr>
-                    
-                    <!-- Dummy Data 3 -->
-                    <tr class="hover:bg-gray-50/50 transition-colors">
-                        <td class="px-6 py-4">
-                            <span class="block font-medium text-gray-900 border-b border-gray-100 pb-1 mb-1">#0003</span>
-                            <span class="text-xs text-gray-500">Kedai Kopi</span>
-                        </td>
-                        <td class="px-6 py-4 text-xs">
-                            <div class="font-medium text-gray-700">1x Mesin Kopi Espresso</div>
-                        </td>
-                        <td class="px-6 py-4 text-xs">
-                            <span class="block whitespace-nowrap"><i class='bx bx-calendar mr-1'></i>01 Mei 26 - 05 Mei 26</span>
-                            <span class="block text-gray-400 mt-1">(4 Hari)</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="inline-flex items-center gap-1 rounded bg-gray-100 px-2 py-1 text-[10px] font-semibold text-gray-600 uppercase">
-                                <i class='bx bx-truck'></i> Diantar
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 font-medium text-gray-900">
-                            Rp 400.000
-                            <span class="text-[10px] items-center text-gray-500 block font-normal">(inc. Ongkir)</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="inline-flex items-center gap-1 rounded-full bg-green-100 px-2.5 py-1 text-xs font-semibold text-green-600 capitalize">
-                                selesai
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 text-right">
-                            <div class="flex items-center justify-end gap-2">
-                                <button @click="statusData = { id: '3', current: 'selesai' }; statusModalOpen = true" 
-                                    class="rounded-lg bg-brand-50 text-brand-600 px-3 py-1.5 text-xs font-semibold hover:bg-brand-100 transition-colors focus:outline-none border border-brand-100">
-                                    Ubah Status
-                                </button>
-                                <a href="#" class="rounded-lg bg-gray-50 text-gray-600 px-3 py-1.5 text-xs font-medium hover:bg-gray-100 transition-colors focus:outline-none border border-gray-200" title="Detail">
-                                    <i class='bx bx-show'></i>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
         
         <!-- Pagination -->
-        <div class="bg-gray-50/50 p-4 sm:flex sm:items-center sm:justify-between border-t border-gray-100 rounded-b-2xl">
-            <p class="text-sm text-gray-500">Menampilkan <span class="font-medium text-gray-700">1</span> sampai <span class="font-medium text-gray-700">3</span> dari <span class="font-medium text-gray-700">15</span> transaksi</p>
-            <div class="mt-4 sm:mt-0 flex gap-2">
-                <button class="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-300 cursor-not-allowed" disabled>Prev</button>
-                <button class="rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none transition-colors">Next</button>
-            </div>
+        <div class="bg-gray-50/50 p-4 border-t border-gray-100 rounded-b-2xl">
+            {{ $transaksi->links('pagination::tailwind') }}
         </div>
     </div>
 
@@ -196,7 +170,8 @@
                 </button>
             </div>
 
-            <form action="#" method="POST" class="p-6 space-y-4">
+            <form action="{{ route('owner.transaksi.update') }}" method="POST" class="p-6 space-y-4">
+                @csrf
                 <input type="hidden" name="id_sewa" :value="statusData.id">
                 
                 <div>
@@ -224,6 +199,93 @@
                 <div class="flex gap-2 pt-2">
                     <button type="button" @click="statusModalOpen = false" class="flex-1 rounded-xl border border-gray-300 py-2.5 text-sm font-semibold text-gray-700 hover:bg-gray-50 focus:outline-none">Batal</button>
                     <button type="submit" class="flex-1 rounded-xl bg-brand-500 py-2.5 text-sm font-semibold text-white hover:bg-brand-600 shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Filter Modal -->
+    <div 
+        x-show="filterModalOpen" 
+        class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50 p-4 backdrop-blur-sm"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+        x-cloak
+        style="display: none;"
+    >
+        <div 
+            @click.outside="filterModalOpen = false"
+            class="w-full max-w-md rounded-2xl bg-white shadow-xl ring-1 ring-gray-200/50 overflow-hidden flex flex-col max-h-[90vh]"
+            x-show="filterModalOpen" 
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 translate-y-4 scale-95"
+            x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+            x-transition:leave-end="opacity-0 translate-y-4 scale-95"
+        >
+            <div class="flex items-center justify-between border-b border-gray-100 px-6 py-4 shrink-0">
+                <h3 class="text-lg font-bold text-gray-800">Filter</h3>
+                <button @click="filterModalOpen = false" class="text-gray-400 hover:text-gray-600 focus:outline-none">
+                    <i class='bx bx-x text-2xl'></i>
+                </button>
+            </div>
+
+            <form action="{{ route('owner.transaksi') }}" method="GET" class="flex flex-col overflow-hidden">
+                <!-- Keep search query if exists -->
+                @if(request()->filled('search'))
+                    <input type="hidden" name="search" value="{{ request('search') }}">
+                @endif
+                
+                <div class="p-6 overflow-y-auto space-y-5 flex-1">
+                    <div>
+                        <label class="mb-2 block text-sm font-semibold text-gray-700">Rentang Tanggal</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs text-gray-500 mb-1">Mulai</label>
+                                <input type="date" name="tgl_awal" value="{{ request('tgl_awal') }}" class="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 text-gray-700">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 mb-1">Sampai</label>
+                                <input type="date" name="tgl_akhir" value="{{ request('tgl_akhir') }}" class="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 text-gray-700">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="mb-2 block text-sm font-semibold text-gray-700">Status Pesanan</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            @php $statuses = ['pending' => 'Pending', 'disewa' => 'Sedang Disewa', 'selesai' => 'Selesai', 'dibatalkan' => 'Dibatalkan', 'terlambat' => 'Terlambat']; @endphp
+                            @foreach($statuses as $val => $label)
+                            <label class="relative flex cursor-pointer items-center gap-2 rounded-xl border border-gray-200 p-2.5 transition hover:bg-gray-50 has-[:checked]:border-brand-500 has-[:checked]:bg-brand-50">
+                                <input type="checkbox" name="status[]" value="{{ $val }}" {{ in_array($val, (array)request('status')) ? 'checked' : '' }} class="accent-brand-500 rounded text-brand-600 focus:ring-brand-500 border-gray-300">
+                                <span class="text-sm font-medium text-gray-700">{{ $label }}</span>
+                            </label>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="mb-2 block text-sm font-semibold text-gray-700">Metode Pengiriman</label>
+                        <div class="flex gap-2">
+                            @php $metodes = ['diantar' => 'Diantar', 'ambil_sendiri' => 'Ambil Sendiri']; @endphp
+                            @foreach($metodes as $val => $label)
+                            <label class="relative flex cursor-pointer items-center gap-2 rounded-xl border border-gray-200 p-2.5 transition hover:bg-gray-50 has-[:checked]:border-brand-500 has-[:checked]:bg-brand-50 flex-1">
+                                <input type="checkbox" name="metode_pengiriman[]" value="{{ $val }}" {{ in_array($val, (array)request('metode_pengiriman')) ? 'checked' : '' }} class="accent-brand-500 rounded text-brand-600 focus:ring-brand-500 border-gray-300">
+                                <span class="text-sm font-medium text-gray-700">{{ $label }}</span>
+                            </label>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-100 bg-gray-50/50 px-6 py-4 flex gap-3 justify-end shrink-0">
+                    <button type="button" @click="filterModalOpen = false" class="rounded-xl border border-gray-300 bg-white px-5 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 focus:outline-none transition-colors">Batal</button>
+                    <button type="submit" class="rounded-xl bg-brand-500 px-5 py-2 text-sm font-semibold text-white hover:bg-brand-600 focus:outline-none shadow-sm transition-colors">Terapkan Filter</button>
                 </div>
             </form>
         </div>
