@@ -18,4 +18,14 @@ class Alat extends Model
     {
         return $this->belongsTo(Kategori::class, 'idkategori', 'id_kategori');
     }
+
+    public function spesifikasi()
+    {
+        return $this->hasMany(Spesifikasi::class, 'idalat', 'idalat');
+    }
+
+    public function fotoDetail()
+    {
+        return $this->hasMany(FotoDetail::class, 'idalat', 'idalat');
+    }
 }

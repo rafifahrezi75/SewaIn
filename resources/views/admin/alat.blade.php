@@ -116,6 +116,9 @@
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex items-center justify-center gap-2">
+                                <a href="{{ route('admin.alat.show', $item->idalat) }}" class="rounded-lg p-2 text-green-600 bg-green-50 hover:bg-green-100 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-1" title="Detail / Galeri">
+                                    <i class='bx bx-show text-xl'></i>
+                                </a>
                                 <button type="button" @click="editData = { id: '{{ $item->idalat }}', nama: {{ json_encode($item->nama_alat) }}, kategori: '{{ $item->idkategori }}', stok: '{{ $item->stok }}', harga: '{{ $item->harga_sewa }}', deskripsi: {{ json_encode($item->deskripsi) }} }; editModalOpen = true; hasEditErrors = false" class="rounded-lg p-2 text-blue-500 bg-blue-50 hover:bg-blue-100 hover:text-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1" title="Edit">
                                     <i class='bx bx-edit text-xl'></i>
                                 </button>

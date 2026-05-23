@@ -147,4 +147,17 @@ class AlatController extends Controller
 
         return redirect()->route('admin.alat')->with('success', 'Data alat berhasil dihapus!');
     }
+
+    /**
+     * Tampilkan detail alat produksi (Spesifikasi & Foto Detail)
+     */
+    public function show($id)
+    {
+        $data = Alat::with(['kategori', 'spesifikasi', 'fotoDetail'])->findOrFail($id);
+        
+        $num_spek = $data->spesifikasi->count();
+        $num_foto = $data->fotoDetail->count();
+
+        return view('admin.detail_alat', compact('data', 'num_spek', 'num_foto'));
+    }
 }

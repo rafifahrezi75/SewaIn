@@ -1,167 +1,679 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SewaIn - Beranda</title>
-    <!-- Google Fonts: Poppins -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind CSS (Vite) -->
-    @vite('resources/css/app.css')
-    
-    <!-- Alpine.js untuk interaktivitas navbar mobile/dropdown -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <title>Beranda - SewaIn</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #F1F5F9;
+            color: #000;
+        }
+
+        /* CARTOON CORE UI */
+        .cartoon-border {
+            border: 3px solid #000;
+        }
+
+        .cartoon-shadow {
+            box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 1);
+        }
+
+        .cartoon-shadow-sm {
+            box-shadow: 3px 3px 0px 0px rgba(0, 0, 0, 1);
+        }
+
+        .cartoon-button:active {
+            transform: translate(3px, 3px);
+            box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 1);
+        }
+
+        .bg-primary {
+            background-color: #1E3A8A;
+        }
+
+        .text-primary {
+            color: #1E3A8A;
+        }
+
+        .bg-aksen {
+            background-color: #14B8A6;
+        }
+
+        .text-aksen {
+            color: #14B8A6;
+        }
+
+        .nav-link.active {
+            color: #1E3A8A;
+            font-weight: 800;
+            position: relative;
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: #14B8A6;
+            border: 2px solid #000;
+            border-radius: 4px;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
 </head>
-<body class="bg-slate-50 font-sans text-slate-800 antialiased">
 
-    <!-- Navbar -->
-    <nav class="bg-white shadow-sm sticky top-0 z-50" x-data="{ mobileMenuOpen: false, profileMenuOpen: false }">
+<body class="pt-20">
+
+    <nav id="main-nav" class="fixed top-0 w-full z-50 bg-white border-b-4 border-black transition-all">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-20">
-                <!-- Logo -->
-                <div class="flex items-center">
-                    <a href="{{ url('/') }}" class="flex items-center gap-2">
-                        <div class="w-10 h-10 bg-brand-500 rounded-xl flex items-center justify-center shadow-lg">
-                            <i data-lucide="layers" class="text-white w-5 h-5"></i>
-                        </div>
-                        <span class="text-2xl font-bold text-brand-700 tracking-tighter">SewaIn.</span>
-                    </a>
+            <div class="flex justify-between h-20 items-center">
+                
+                <div class="flex items-center gap-2">
+                    <div class="w-10 h-10 bg-primary cartoon-border rounded-xl flex items-center justify-center cartoon-shadow-sm">
+                        <i data-lucide="layers" class="text-white w-6 h-6"></i>
+                    </div>
+                    <span class="text-2xl font-black text-gray-900 tracking-tighter">Sewa<span class="text-primary">In</span></span>
                 </div>
 
-                <!-- Desktop Menu -->
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="#" class="text-slate-600 hover:text-brand-500 font-medium transition-colors">Beranda</a>
-                    <a href="#" class="text-slate-600 hover:text-brand-500 font-medium transition-colors">Katalog Alat</a>
-                    <a href="#" class="text-slate-600 hover:text-brand-500 font-medium transition-colors">Tentang Kami</a>
-                    <a href="#" class="text-slate-600 hover:text-brand-500 font-medium transition-colors">Kontak</a>
+                <div class="hidden lg:flex flex-1 max-w-md mx-8">
+                    <form action="{{ route('katalog.index') }}" method="GET" class="relative w-full">
+                        <input type="text" name="search" placeholder="Cari Mixer, Oven, atau Kompor..."
+                            class="w-full bg-white cartoon-border rounded-2xl py-2.5 pl-11 pr-4 text-sm font-bold outline-none focus:bg-yellow-50 cartoon-shadow-sm">
+                        <button type="submit" class="absolute left-4 top-3 text-black">
+                            <i data-lucide="search" class="w-4 h-4 text-black border-none bg-transparent"></i>
+                        </button>
+                    </form>
                 </div>
 
-                <!-- Auth Buttons / Profile Dropdown -->
-                <div class="hidden md:flex items-center space-x-4">
-                    @guest
-                        <a href="{{ route('login') }}" class="text-slate-600 hover:text-brand-600 font-bold transition-colors">Masuk</a>
-                        <a href="{{ route('register') }}" class="bg-brand-500 hover:bg-brand-600 text-white px-5 py-2.5 rounded-xl font-bold transition-all shadow-lg shadow-brand-500/30">Daftar</a>
-                    @endguest
-
-                    @auth
-                        <!-- Profile Dropdown -->
-                        <div class="relative">
-                            <button @click="profileMenuOpen = !profileMenuOpen" @click.outside="profileMenuOpen = false" class="flex items-center gap-3 focus:outline-none">
-                                <div class="text-right">
-                                    <p class="text-sm font-bold text-slate-800 leading-tight">{{ auth()->user()->nama }}</p>
-                                    <p class="text-[10px] font-bold text-brand-500 uppercase tracking-wider">{{ auth()->user()->role }}</p>
-                                </div>
-                                <div class="w-10 h-10 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center font-bold border border-brand-200">
-                                    {{ substr(auth()->user()->nama, 0, 1) }}
-                                </div>
-                                <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400" :class="{'rotate-180': profileMenuOpen}"></i>
-                            </button>
-
-                            <!-- Dropdown Menu -->
-                            <div x-show="profileMenuOpen" x-transition.opacity class="absolute right-0 mt-3 w-48 bg-white rounded-xl shadow-xl border border-slate-100 py-2 z-50" x-cloak>
-                                @if(auth()->user()->role === 'admin')
-                                    <a href="{{ url('/admin/dashboard') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-brand-500">Dashboard Admin</a>
-                                @elseif(auth()->user()->role === 'owner')
-                                    <a href="{{ url('/owner/dashboard') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-brand-500">Dashboard Owner</a>
-                                @else
-                                    <a href="#" class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-brand-500">Profil Saya</a>
-                                @endif
-                                
-                                <div class="border-t border-slate-100 my-1"></div>
-                                
-                                <form action="{{ route('logout') }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 font-medium">
-                                        Keluar
-                                    </button>
-                                </form>
+                <div class="flex items-center gap-4">
+                    <div class="hidden md:flex items-center gap-6 text-sm font-extrabold text-gray-600">
+                        <a href="#beranda" class="nav-link active hover:text-primary transition">Beranda</a>
+                        <a href="#tentang" class="nav-link hover:text-primary transition">Tentang Kami</a>
+                        <div class="relative dropdown group py-4 cursor-pointer">
+                            <div class="flex items-center gap-1 font-extrabold group-hover:text-primary">Layanan <i
+                                    data-lucide="chevron-down" class="w-4 h-4"></i></div>
+                            <div class="dropdown-menu absolute hidden left-0 mt-0 w-56 bg-white cartoon-border cartoon-shadow rounded-2xl overflow-hidden pt-2">
+                                <a href="{{ route('katalog.index') }}" class="block px-5 py-4 hover:bg-yellow-50 text-gray-700 transition flex items-center gap-3 border-b-2 border-black">
+                                    <div class="p-2 bg-orange-100 cartoon-border rounded-lg"><i data-lucide="layout-grid" class="w-4 h-4 text-orange-500"></i></div>
+                                    <div><span class="block font-black text-xs uppercase">Semua Alat</span><span class="text-[10px] text-gray-400 font-bold">Lihat seluruh koleksi kami</span></div>
+                                </a>
+                                <a href="#pinjam-alat" class="block px-5 py-4 hover:bg-yellow-50 text-gray-700 transition flex items-center gap-3">
+                                    <div class="p-2 bg-teal-100 cartoon-border rounded-lg"><i data-lucide="calendar-plus" class="w-4 h-4 text-primary"></i></div>
+                                    <div><span class="block font-black text-xs uppercase italic">Pinjam Alat</span><span class="text-[9px] text-gray-400 font-bold uppercase">Prosedur Peminjaman</span></div>
+                                </a>
+                                <a href="#pengembalian" class="block px-5 py-4 hover:bg-yellow-50 text-gray-700 transition flex items-center gap-3">
+                                    <div class="p-2 bg-teal-100 cartoon-border rounded-lg"><i data-lucide="package-check" class="w-4 h-4 text-aksen"></i></div>
+                                    <div><span class="block font-black text-xs uppercase italic">Pengembalian</span><span class="text-[9px] text-gray-400 font-bold uppercase">Proses Retur Alat</span></div>
+                                </a>
                             </div>
                         </div>
+                    </div>
+
+                    @auth
+                        <button onclick="toggleProfile()" class="flex items-center gap-2 bg-primary text-white px-6 py-2.5 rounded-xl cartoon-border cartoon-shadow-sm cartoon-button transition-all uppercase text-xs font-black">
+                            <i data-lucide="user" class="w-4 h-4"></i> <span id="nav-profile-text">{{ explode(' ', auth()->user()->nama)[0] }}</span>
+                        </button>
                     @endauth
+                    @guest
+                        <a href="{{ route('login') }}" class="flex items-center gap-2 bg-primary text-white px-6 py-2.5 rounded-xl cartoon-border cartoon-shadow-sm cartoon-button transition-all uppercase text-xs font-black">
+                            <i data-lucide="log-in" class="w-4 h-4"></i> <span>Masuk</span>
+                        </a>
+                    @endguest
                 </div>
 
-                <!-- Mobile menu button -->
-                <div class="flex items-center md:hidden">
-                    <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-slate-500 hover:text-brand-500 focus:outline-none">
-                        <i data-lucide="menu" class="w-7 h-7" x-show="!mobileMenuOpen"></i>
-                        <i data-lucide="x" class="w-7 h-7" x-show="mobileMenuOpen" x-cloak></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Mobile Menu -->
-        <div x-show="mobileMenuOpen" x-collapse class="md:hidden border-t border-slate-100 bg-white" x-cloak>
-            <div class="px-4 pt-2 pb-4 space-y-1">
-                <a href="#" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-brand-500">Beranda</a>
-                <a href="#" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-brand-500">Katalog Alat</a>
-                <a href="#" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-brand-500">Tentang Kami</a>
-                <a href="#" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-brand-500">Kontak</a>
-            </div>
-            
-            <div class="pt-4 pb-4 border-t border-slate-100">
-                @guest
-                    <div class="flex flex-col gap-3 px-5">
-                        <a href="{{ route('login') }}" class="w-full text-center border-2 border-brand-500 text-brand-600 px-5 py-2.5 rounded-xl font-bold">Masuk</a>
-                        <a href="{{ route('register') }}" class="w-full text-center bg-brand-500 text-white px-5 py-2.5 rounded-xl font-bold shadow-lg shadow-brand-500/30">Daftar</a>
-                    </div>
-                @endguest
-
-                @auth
-                    <div class="flex items-center px-5 mb-4">
-                        <div class="w-10 h-10 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center font-bold border border-brand-200">
-                            {{ substr(auth()->user()->nama, 0, 1) }}
-                        </div>
-                        <div class="ml-3">
-                            <p class="text-base font-bold text-slate-800">{{ auth()->user()->nama }}</p>
-                            <p class="text-xs font-bold text-brand-500 uppercase">{{ auth()->user()->role }}</p>
-                        </div>
-                    </div>
-                    <div class="mt-3 px-2 space-y-1">
-                        @if(auth()->user()->role === 'admin')
-                            <a href="{{ url('/admin/dashboard') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-brand-500">Dashboard Admin</a>
-                        @elseif(auth()->user()->role === 'owner')
-                            <a href="{{ url('/owner/dashboard') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-brand-500">Dashboard Owner</a>
-                        @else
-                            <a href="#" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-brand-500">Profil Saya</a>
-                        @endif
-                        <form action="{{ route('logout') }}" method="POST">
-                            @csrf
-                            <button type="submit" class="w-full text-left px-3 py-2 rounded-lg text-base font-medium text-red-600 hover:bg-red-50">Keluar</button>
-                        </form>
-                    </div>
-                @endauth
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div class="text-center">
-            <h1 class="text-4xl md:text-6xl font-black text-slate-900 tracking-tight mb-6">
-                Sewa Alat Produksi <br class="hidden md:block">
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-500 to-[#14B8A6]">Lebih Mudah & Cepat</span>
-            </h1>
-            <p class="text-lg md:text-xl text-slate-500 max-w-2xl mx-auto mb-10 leading-relaxed">
-                Platform terpercaya untuk menyewa berbagai alat produksi berkualitas. Kembangkan bisnismu tanpa harus membeli alat mahal.
-            </p>
-            @guest
-                <a href="{{ route('register') }}" class="inline-block bg-brand-500 hover:bg-brand-600 text-white px-8 py-4 rounded-2xl font-bold text-lg transition-all shadow-xl shadow-brand-500/30 active:scale-95">
-                    Mulai Sekarang
-                </a>
-            @endguest
-            @auth
-                <p class="text-lg font-medium text-slate-600">Selamat datang kembali, <span class="font-bold text-brand-600">{{ auth()->user()->nama }}</span>!</p>
-            @endauth
+    <section id="beranda" class="pt-20 pb-24 px-4 bg-[#F1F5F9]">
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+            <div class="space-y-8 text-left">
+                <div
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white cartoon-border cartoon-shadow-sm text-aksen text-xs font-black uppercase italic">
+                    🚀 Sistem Otomatis 24/7
+                </div>
+                <h1 class="text-5xl lg:text-6xl font-black text-slate-900 leading-[1.1] mb-6">
+                    Sekarang <br><span
+                        class="text-primary font-black italic bg-yellow-300 cartoon-border cartoon-shadow-sm px-2">Sewa
+                        Alat Produksi</span> Tanpa Ribet.
+                </h1>
+                <p class="text-slate-600 text-xl font-bold leading-relaxed max-w-lg">
+                    Temukan Alat Produksi Yang Anda Butuhkan dan Sewa Dengan Mudah Dalam Satu Platform.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="{{ route('katalog.index') }}"
+                        class="bg-primary text-white px-10 py-5 rounded-2xl font-black cartoon-border cartoon-shadow cartoon-button text-sm uppercase tracking-widest transition-all">Mulai
+                        Pinjam</a>
+                </div>
+            </div>
+            <div class="relative">
+                <div class="bg-white p-4 rounded-[2.5rem] cartoon-border cartoon-shadow rotate-3">
+                    <div class="rounded-[2rem] aspect-[4/3] overflow-hidden border-4 border-black">
+                        @if ($hero && !empty($hero->gambar))
+                            <img src="{{ asset('storage/' . $hero->gambar) }}"
+                                 alt="{{ $hero->nama_alat }}"
+                                 class="w-full h-full object-cover">
+                        @else
+                            <div class="w-full h-full bg-slate-200 flex flex-col items-center justify-center border-dashed">
+                                <i data-lucide="image-plus" class="w-16 h-16 text-black"></i>
+                                <span class="mt-4 text-black font-black uppercase">Hero Image Produk</span>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
         </div>
+    </section>
+
+    <section id="tentang" class="py-32 bg-white cartoon-border border-x-0 relative z-10">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center max-w-2xl mx-auto mb-20">
+                <span class="text-aksen font-black uppercase tracking-widest text-sm italic">Kenapa Harus SewaIn?</span>
+                <h2 class="text-4xl font-black text-slate-900 mt-3 uppercase">Keunggulan Layanan Kami</h2>
+                <div class="h-2 w-20 bg-aksen mx-auto cartoon-border rounded-full mt-6"></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <div class="group p-8 rounded-[2.5rem] bg-aksen cartoon-border cartoon-shadow transition-all text-left">
+                    <div
+                        class="w-16 h-16 bg-white cartoon-border rounded-2xl flex items-center justify-center mb-8 shadow-[4px_4px_0px_0px_#000]">
+                        <i data-lucide="zap" class="text-aksen w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-black text-slate-900 mb-4 uppercase italic font-black">Proses Serba Otomatis</h3>
+                    <p class="text-slate-900 font-bold">Mulai dari cek stok hingga hitung denda,
+                        semuanya diatur oleh
+                        sistem pintar kami secara real-time.</p>
+                </div>
+                <div class="group p-8 rounded-[2.5rem] bg-yellow-50 cartoon-border cartoon-shadow transition-all text-left">
+                    <div
+                        class="w-16 h-16 bg-white cartoon-border rounded-2xl flex items-center justify-center mb-8 shadow-[4px_4px_0px_0px_#000]">
+                        <i data-lucide="shield-check" class="text-primary w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-black text-slate-900 mb-4 uppercase italic font-black">Jaminan Alat Berkualitas</h3>
+                    <p class="text-black font-bold">Setiap alat melewati proses QC ketat sebelum dipinjamkan untuk
+                        memastikan kesuksesan produksi Anda.</p>
+                </div>
+                <div class="group p-8 rounded-[2.5rem] bg-aksen cartoon-border cartoon-shadow transition-all text-left">
+                    <div
+                        class="w-16 h-16 bg-white cartoon-border rounded-2xl flex items-center justify-center mb-8 shadow-[4px_4px_0px_0px_#000]">
+                        <i data-lucide="clock" class="text-aksen w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-xl font-black text-slate-900 mb-4 uppercase italic font-black">Layanan 24/7</h3>
+                    <p class="text-black font-bold">Akses dashboard peminjaman kapan saja dan di mana saja. Kami
+                        siap membantu kebutuhan mendadak Anda.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="layanan" class="py-8 px-4 bg-[#F1F5F9] relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 relative z-10">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-aksen font-black uppercase tracking-widest text-xs italic">Langkah Mudah</span>
+                <h2 class="text-4xl font-black text-slate-900 mt-2 uppercase">How to Order</h2>
+                <div class="h-2 w-20 bg-aksen mx-auto cartoon-border rounded-full mt-4"></div>
+                <p class="text-slate-500 mt-6 font-bold italic"> 5 langkah sederhana untuk menyewa alat produksi kami.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-8 text-left">
+                <div class="relative group">
+                    <div
+                        class="mb-6 w-16 h-16 bg-white cartoon-border cartoon-shadow-sm flex items-center justify-center text-primary group-hover:bg-primary transition-all">
+                        <i data-lucide="search" class="w-8 h-8"></i>
+                        <span
+                            class="absolute -top-4 -left-4 w-10 h-10 bg-aksen text-white cartoon-border rounded-full flex items-center justify-center font-black text-sm">1</span>
+                    </div>
+                    <h4 class="font-black text-slate-900 mb-2 uppercase italic text-sm">Cari Alat</h4>
+                    <p class="text-[11px] text-slate-600 font-bold leading-relaxed">Gunakan fitur pencarian atau
+                        kategori untuk menemukan alat yang sesuai kebutuhan.</p>
+                </div>
+                <div class="relative group">
+                    <div
+                        class="mb-6 w-16 h-16 bg-white cartoon-border cartoon-shadow-sm flex items-center justify-center text-primary group-hover:bg-primary  transition-all">
+                        <i data-lucide="calendar-range" class="w-8 h-8"></i>
+                        <span
+                            class="absolute -top-4 -left-4 w-10 h-10 bg-aksen text-white cartoon-border rounded-full flex items-center justify-center font-black text-sm">2</span>
+                    </div>
+                    <h4 class="font-black text-slate-900 mb-2 uppercase italic text-sm">Detail Sewa</h4>
+                    <p class="text-[11px] text-slate-600 font-bold leading-relaxed">Tentukan tanggal mulai, selesai, dan
+                        jumlah unit alat yang ingin disewa.</p>
+                </div>
+                <div class="relative group">
+                    <div
+                        class="mb-6 w-16 h-16 bg-white cartoon-border cartoon-shadow-sm flex items-center justify-center text-primary group-hover:bg-primary transition-all">
+                        <i data-lucide="truck" class="w-8 h-8"></i>
+                        <span
+                            class="absolute -top-4 -left-4 w-10 h-10 bg-aksen text-white cartoon-border rounded-full flex items-center justify-center font-black text-sm">3</span>
+                    </div>
+                    <h4 class="font-black text-slate-900 mb-2 uppercase italic text-sm">Metode Ambil</h4>
+                    <p class="text-[11px] text-slate-600 font-bold leading-relaxed">Pilih <b>Ambil Sendiri</b> atau
+                        <b>Pengiriman ke Lokasi</b> (ongkir sesuai jarak).
+                    </p>
+                </div>
+                <div class="relative group">
+                    <div
+                        class="mb-6 w-16 h-16 bg-white cartoon-border cartoon-shadow-sm flex items-center justify-center text-primary group-hover:bg-primary transition-all">
+                        <i data-lucide="clipboard-check" class="w-8 h-8"></i>
+                        <span
+                            class="absolute -top-4 -left-4 w-10 h-10 bg-aksen text-white cartoon-border rounded-full flex items-center justify-center font-black text-sm">4</span>
+                    </div>
+                    <h4 class="font-black text-slate-900 mb-2 uppercase italic text-sm">Konfirmasi</h4>
+                    <p class="text-[11px] text-slate-600 font-bold leading-relaxed">Periksa kembali detail pesanan dan
+                        total biaya sebelum proses checkout.</p>
+                </div>
+                <div class="relative group">
+                    <div
+                        class="mb-6 w-16 h-16 bg-white cartoon-border cartoon-shadow-sm flex items-center justify-center text-primary group-hover:bg-primary transition-all">
+                        <i data-lucide="package" class="w-8 h-8"></i>
+                        <span
+                            class="absolute -top-4 -left-4 w-10 h-10 bg-aksen text-white cartoon-border rounded-full flex items-center justify-center font-black text-sm">5</span>
+                    </div>
+                    <h4 class="font-black text-slate-900 mb-2 uppercase italic text-sm">Terima Alat</h4>
+                    <p class="text-[11px] text-slate-600 font-bold leading-relaxed">Datang ke lokasi penyedia atau
+                        tunggu alat dikirim sesuai jadwal pilihan.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="pinjam-alat" class="py-24 px-4 bg-[#F1F5F9] relative z-10">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="bg-primary cartoon-border cartoon-shadow rounded-[3rem] p-12 overflow-hidden relative">
+                <div class="relative z-10 grid md:grid-cols-2 gap-12 items-center text-left">
+                    <div>
+                        <span
+                            class="text-aksen font-black uppercase tracking-widest text-xs italic bg-white cartoon-border px-4 py-1.5 rounded-full">Layanan Utama</span>
+                        <h2 class="text-4xl font-black text-white mt-6 leading-tight uppercase font-black">Siap Memulai Produksi?<br>Pinjam Alat Sekarang.</h2>
+                        <p class="text-blue-100 mt-6 font-bold italic leading-relaxed">Pilih berbagai macam peralatan
+                            profesional kami. Proses verifikasi cepat, alat terjamin aman, dan siap pakai untuk
+                            kebutuhan Anda.</p>
+                        <div class="mt-10">
+                            <a href="#katalog"
+                                class="bg-aksen text-black cartoon-border cartoon-shadow cartoon-button px-8 py-4 rounded-2xl font-black text-lg flex items-center w-fit gap-2 uppercase italic tracking-tighter">Lihat
+                                Katalog</a>
+                        </div>
+                    </div>
+                    <div class="bg-white/10 p-8 rounded-[2rem] border-4 border-dashed border-white/20">
+                        <h4 class="text-white font-black mb-4 flex items-center gap-2 uppercase italic"><i
+                                data-lucide="info" class="text-aksen w-5 h-5"></i> Syarat Peminjaman:</h4>
+                        <ul class="space-y-4 text-blue-50 text-sm font-bold italic">
+                            <li class="flex gap-3"><i data-lucide="check-circle"
+                                    class="text-aksen w-5 h-5 shrink-0"></i> Memiliki KTP/Kartu Identitas aktif</li>
+                            <li class="flex gap-3"><i data-lucide="check-circle"
+                                    class="text-aksen w-5 h-5 shrink-0"></i> Melakukan pembayaran DP sesuai unit</li>
+                            <li class="flex gap-3"><i data-lucide="check-circle"
+                                    class="text-aksen w-5 h-5 shrink-0"></i> Bersedia menjaga kebersihan alat</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="katalog" class="py-16 bg-white cartoon-border border-x-0 relative z-20 -mt-8">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center mb-8">
+                <div class="max-w-xl text-left">
+                    <h2 class="text-3xl font-black text-slate-900 uppercase italic">Katalog Alat Produksi</h2>
+                    <div class="h-1.5 w-16 bg-aksen cartoon-border rounded-full mt-2"></div>
+                </div>
+                <a href="{{ route('katalog.index') }}"
+                    class="group flex items-center gap-2 px-4 py-2 rounded-xl bg-yellow-300 cartoon-border cartoon-shadow-sm cartoon-button text-black text-[10px] font-black uppercase italic transition-all">
+                    Lihat Semua Alat <i data-lucide="arrow-right"
+                        class="w-3 h-3 group-hover:translate-x-1 transition-transform"></i>
+                </a>
+            </div>
+
+            <div class="flex overflow-x-auto gap-6 pb-8 snap-x no-scrollbar">
+
+                @if ($query_katalog->count() > 0)
+                    @foreach ($query_katalog as $alat)
+                    <div
+                        class="snap-start shrink-0 w-[260px] md:w-[300px] bg-slate-50 cartoon-border cartoon-shadow-sm rounded-[2rem] p-4 hover:bg-yellow-50 transition-all group text-left">
+                        <div
+                            class="bg-white cartoon-border rounded-[1.5rem] aspect-square mb-4 flex items-center justify-center relative overflow-hidden">
+                            @if (!empty($alat->gambar))
+                                <img src="{{ asset('storage/' . $alat->gambar) }}"
+                                     alt="{{ $alat->nama_alat }}"
+                                     class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                            @else
+                                <i data-lucide="chef-hat"
+                                    class="text-slate-200 w-16 h-16 group-hover:scale-110 transition duration-500"></i>
+                            @endif
+                            <div
+                                class="absolute top-3 right-3 bg-aksen text-white cartoon-border text-[8px] font-black px-2 py-1 rounded-full uppercase">
+                                Tersedia</div>
+                        </div>
+                        <div class="space-y-1">
+                            <p class="text-aksen font-black text-[9px] uppercase italic">
+                                {{ $alat->kategori ? $alat->kategori->kategori : 'Umum' }}
+                            </p>
+                            <h3 class="font-black text-base text-slate-900 uppercase leading-tight truncate">
+                                {{ $alat->nama_alat }}
+                            </h3>
+                            <div class="flex items-baseline gap-1 mt-1 mb-3">
+                                <span class="text-xl font-black text-primary italic">Rp{{ number_format($alat->harga_sewa, 0, ',', '.') }}</span>
+                                <span class="text-slate-400 text-[10px] font-bold">/ hari</span>
+                            </div>
+                            <a href="{{ route('alat.detail', $alat->idalat) }}"
+                                class="w-full bg-primary text-white py-2.5 rounded-xl cartoon-border cartoon-shadow-sm cartoon-button font-black text-[10px] text-center block uppercase italic">
+                                PINJAM ALAT
+                            </a>
+                        </div>
+                    </div>
+                    @endforeach
+                @else
+                    <div class="flex flex-col items-center justify-center w-full py-16 text-slate-300">
+                        <i data-lucide="package-x" class="w-16 h-16 mb-4"></i>
+                        <p class="font-black uppercase italic text-sm">Belum ada alat tersedia.</p>
+                    </div>
+                @endif
+
+            </div>
+            <div
+                class="flex items-center justify-center gap-2 text-black text-[9px] font-black italic mt-2 uppercase tracking-tighter animate-pulse">
+                <i data-lucide="move-horizontal" class="w-3 h-3"></i> Geser untuk melihat alat produksi lainnya
+            </div>
+        </div>
+    </section>
+
+    <section id="pengembalian" class="py-32 px-4 bg-[#F1F5F9] relative z-10">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex flex-col md:flex-row gap-16 items-center">
+                <div class="w-full md:w-1/2">
+                    <div class="bg-white p-6 rounded-[2.5rem] cartoon-border cartoon-shadow">
+                        <div class="bg-slate-50 rounded-[2rem] p-8 border-4 border-dashed border-black text-center">
+                            <div
+                                class="w-20 h-20 bg-teal-100 cartoon-border rounded-full flex items-center justify-center mx-auto mb-6 shadow-[4px_4px_0px_0px_#000]">
+                                <i data-lucide="package-check" class="text-aksen w-10 h-10"></i>
+                            </div>
+                            <h3 class="text-2xl font-black text-slate-900 uppercase italic">Alur Pengembalian</h3>
+                            <p class="text-slate-500 mt-2 font-bold italic">Mudah, transparan, dan tanpa drama.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full md:w-1/2 space-y-10 text-left">
+                    <div>
+                        <h2 class="text-4xl font-black text-slate-900 uppercase font-black">Prosedur Pengembalian</h2>
+                        <div class="h-2 w-20 bg-aksen cartoon-border rounded-full mt-4"></div>
+                    </div>
+                    <div class="space-y-8">
+                        <div class="flex gap-6 group">
+                            <div
+                                class="w-12 h-12 bg-white cartoon-border rounded-xl shadow-[3px_3px_0px_0px_#000] flex items-center justify-center shrink-0 font-black text-primary italic">
+                                01</div>
+                            <div>
+                                <h4 class="font-black text-slate-900 uppercase italic">Pengecekan Unit</h4>
+                                <p class="text-sm text-slate-600 font-bold">Tim kami akan melakukan Quick Check fisik
+                                    dan fungsi alat di depan Anda.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-6 group">
+                            <div
+                                class="w-12 h-12 bg-white cartoon-border rounded-xl shadow-[3px_3px_0px_0px_#000] flex items-center justify-center shrink-0 font-black text-primary italic">
+                                02</div>
+                            <div>
+                                <h4 class="font-black text-slate-900 uppercase italic">Penyelesaian Admin</h4>
+                                <p class="text-sm text-slate-600 font-bold">Tanda tangan bukti pengembalian dan
+                                    pelunasan sisa biaya (jika ada).</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-6 group">
+                            <div
+                                class="w-12 h-12 bg-white cartoon-border rounded-xl shadow-[3px_3px_0px_0px_#000] flex items-center justify-center shrink-0 font-black text-primary italic">
+                                03</div>
+                            <div>
+                                <h4 class="font-black text-slate-900 uppercase italic">Selesai</h4>
+                                <p class="text-sm text-slate-600 font-bold">Deposit akan dikembalikan atau dialihkan
+                                    untuk sewa berikutnya.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="alamat" class="bg-primary text-white pt-24 pb-12 cartoon-border border-x-0 border-b-0">
+        <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-4 gap-12 text-center md:text-left">
+            <div class="col-span-1 md:col-span-2 space-y-6">
+                <div class="flex items-center justify-center md:justify-start gap-2">
+                    <div
+                        class="w-10 h-10 bg-white cartoon-border rounded-lg flex items-center justify-center shadow-[3px_3px_0px_0px_#000]">
+                        <i data-lucide="layers" class="text-primary w-6 h-6"></i>
+                    </div>
+                    <span class="text-2xl font-black uppercase italic tracking-tighter text-white">Sewa<span
+                            class="text-aksen">In</span></span>
+                </div>
+                <p class="text-blue-100 font-bold italic text-sm">SewaIn adalah solusi terdepan untuk kebutuhan
+                    peralatan produksi profesional. Kami menyediakan alat-alat berkualitas tinggi dengan sistem
+                    peminjaman yang modern dan terpercaya.</p>
+            </div>
+            <div>
+                <h4 class="font-black uppercase italic mb-6 text-aksen">Kontak Kami</h4>
+                <ul class="space-y-4 text-sm font-bold italic text-left">
+                    <li>
+                        <a href="https://wa.me/6287776600292" target="_blank"
+                            class="flex items-center justify-center md:justify-start gap-3 hover:text-aksen transition-colors">
+                            <i data-lucide="phone" class="w-4 h-4"></i>
+                            +62 877-7660-0292
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="mailto:fahisprasetya023@gmail.com"
+                            class="flex items-center justify-center md:justify-start gap-3 hover:text-aksen transition-colors">
+                            <i data-lucide="mail" class="w-4 h-4"></i>
+                            halo@sewain.com
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="https://instagram.com/fhisssp" target="_blank"
+                            class="flex items-center justify-center md:justify-start gap-3 hover:text-aksen transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4zm9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8A1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5a5 5 0 0 1-5 5a5 5 0 0 1-5-5a5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3"/></svg>
+                            @sewain.official
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="border-4 border-dashed border-white/20 p-6 rounded-3xl text-left">
+                <p class="font-black italic text-xs uppercase tracking-widest mb-2">© 2026 SewaIn - Sewa Alat Produksi
+                </p>
+                <p class="text-[10px] text-blue-200 font-bold italic">Jl. Kartini no.4 Sidoarjo, Jawa Timur, Indonesia</p>
+            </div>
+        </div>
+    </footer>
+
+    <div id="profile-overlay" class="fixed inset-0 bg-black/50 z-[60] hidden transition-opacity duration-300 opacity-0" onclick="toggleProfile()"></div>
+
+    <div id="profile-panel" class="fixed top-0 right-0 h-full w-full sm:w-1/3 lg:w-1/4 bg-white z-[70] border-l-4 border-black translate-x-full transition-transform duration-500 ease-in-out flex flex-col">
+        @auth
+        <div class="p-6 border-b-4 border-black bg-yellow-300 flex justify-between items-center text-left">
+            <h2 class="text-xl font-black uppercase italic leading-none">Profil Saya</h2>
+            <button onclick="toggleProfile()" class="w-10 h-10 bg-white cartoon-border rounded-xl flex items-center justify-center cartoon-shadow-sm active:translate-y-1">
+                <i data-lucide="x" class="w-6 h-6 text-black"></i>
+            </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-6 space-y-6 text-left">
+            <div class="text-center space-y-3">
+                <div class="w-24 h-24 bg-primary cartoon-border rounded-3xl mx-auto flex items-center justify-center cartoon-shadow">
+                    <i data-lucide="user" class="text-white w-12 h-12"></i>
+                </div>
+                <div>
+                    <h3 id="profile-name" class="font-black text-lg uppercase italic">{{ auth()->user()->nama }}</h3>
+                    <span class="text-[10px] font-bold bg-aksen cartoon-border px-3 py-1 rounded-full uppercase">Penyewa</span>
+                </div>
+            </div>
+
+            <hr class="border-2 border-black border-dashed">
+
+            <div class="space-y-4">
+                <div class="space-y-1">
+                    <span class="text-[10px] font-black text-gray-400 uppercase italic">Email</span>
+                    <p id="profile-email" class="font-bold text-sm">{{ auth()->user()->email }}</p>
+                </div>
+                <div class="space-y-1">
+                    <span class="text-[10px] font-black text-gray-400 uppercase italic">No. Telepon</span>
+                    <p id="profile-phone" class="font-bold text-sm">{{ auth()->user()->notelp ?? '-' }}</p>
+                </div>
+            </div>
+
+            <div class="pt-4 space-y-3">
+                @if(auth()->user()->role === 'admin')
+                    <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 p-4 bg-slate-100 cartoon-border rounded-2xl font-black text-xs uppercase italic hover:bg-yellow-50 transition-colors">
+                        <i data-lucide="layout-dashboard" class="w-4 h-4 text-primary"></i> Dashboard Admin
+                    </a>
+                @elseif(auth()->user()->role === 'owner')
+                    <a href="{{ route('owner.dashboard') }}" class="flex items-center gap-3 p-4 bg-slate-100 cartoon-border rounded-2xl font-black text-xs uppercase italic hover:bg-yellow-50 transition-colors">
+                        <i data-lucide="layout-dashboard" class="w-4 h-4 text-primary"></i> Dashboard Owner
+                    </a>
+                @endif
+                <a href="{{ route('riwayat.sewa') }}" class="flex items-center gap-3 p-4 bg-slate-100 cartoon-border rounded-2xl font-black text-xs uppercase italic hover:bg-yellow-50 transition-colors">
+                    <i data-lucide="history" class="w-4 h-4 text-primary"></i> Riwayat Sewa
+                </a>
+            </div>
+        </div>
+
+        <div class="p-6 border-t-4 border-black">
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="w-full bg-red-500 text-white py-4 rounded-2xl cartoon-border cartoon-shadow-sm font-black text-center block uppercase italic hover:bg-red-600 transition-colors">
+                    Keluar
+                </button>
+            </form>
+        </div>
+        @endauth
     </div>
 
     <script>
         lucide.createIcons();
+
+        // Fungsi untuk mengatur menu aktif
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('section');
+
+        // 1. Perpindahan saat diklik
+        navLinks.forEach(link => {
+            link.addEventListener('click', function () {
+                navLinks.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // 2. Perpindahan otomatis saat scroll
+        window.addEventListener('scroll', () => {
+            let current = "";
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= (sectionTop - 150)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+
+            const nav = document.getElementById('main-nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('py-2', 'bg-white/95');
+            } else {
+                nav.classList.remove('py-2', 'bg-white/95');
+            }
+        });
+
+        function showGuestAlert(message = "Silakan Masuk Untuk Melanjutkan") {
+            const overlay = document.createElement('div');
+            overlay.className = "fixed inset-0 bg-black/60 backdrop-blur-sm z-[299] flex items-center justify-center p-6";
+            document.body.appendChild(overlay);
+
+            const toast = document.createElement('div');
+            toast.className = "bg-white cartoon-border cartoon-shadow p-10 flex flex-col items-center gap-8 text-center w-full max-w-[420px]";
+            toast.innerHTML = `
+                <div class="w-28 h-28 bg-primary cartoon-border rounded-full flex items-center justify-center text-white cartoon-shadow-sm">
+                    <i data-lucide="lock" class="w-14 h-14"></i>
+                </div>
+                <div class="space-y-4">
+                    <h4 class="font-black text-3xl uppercase italic text-slate-900 leading-tight">Akses Terbatas!</h4>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-widest leading-relaxed">${message}</p>
+                </div>
+                <div class="w-full">
+                    <div class="bg-yellow-300 cartoon-border px-6 py-4 font-black text-[10px] uppercase italic cartoon-shadow-sm flex items-center justify-center gap-3">
+                         <div class="w-2 h-2 bg-black rounded-full animate-ping"></div>
+                         MENGALIHKAN KE HALAMAN LOGIN...
+                    </div>
+                </div>
+            `;
+            overlay.appendChild(toast);
+            lucide.createIcons();
+            
+            setTimeout(() => {
+                window.location.href = "{{ route('login') }}";
+            }, 2000);
+        }
+
+        function checkLoginBeforeBorrow(idalat) {
+            @auth
+                window.location.href = '/alat/' + idalat;
+            @else
+                showGuestAlert("Silakan Masuk Terlebih Dahulu Untuk Meminjam Alat");
+            @endauth
+        }
+
+        function toggleProfile() {
+            @guest
+                showGuestAlert("Silakan Masuk Terlebih Dahulu Untuk Melihat Profil Anda");
+                return;
+            @endguest
+
+            const panel = document.getElementById('profile-panel');
+            const overlay = document.getElementById('profile-overlay');
+            
+            if (panel.classList.contains('translate-x-full')) {
+                panel.classList.remove('translate-x-full');
+                overlay.classList.remove('hidden');
+                setTimeout(() => overlay.classList.add('opacity-100'), 10);
+                document.body.style.overflow = 'hidden';
+            } else {
+                panel.classList.add('translate-x-full');
+                overlay.classList.remove('opacity-100');
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                    document.body.style.overflow = 'auto';
+                }, 300);
+            }
+        }
     </script>
 </body>
+
 </html>

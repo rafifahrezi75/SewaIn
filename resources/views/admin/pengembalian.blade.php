@@ -1,4 +1,4 @@
-@extends('layouts.owner')
+@extends('layouts.admin')
 
 @section('title', 'Pengembalian Alat')
 

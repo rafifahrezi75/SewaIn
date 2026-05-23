@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katalog - SewaIn</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #F1F5F9;
+            overflow: hidden;
+        }
+
+        .cartoon-border {
+            border: 3px solid #000;
+        }
+
+        .cartoon-shadow {
+            box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 1);
+        }
+
+        .cartoon-shadow-sm {
+            box-shadow: 3px 3px 0px 0px rgba(0, 0, 0, 1);
+        }
+
+        .cartoon-button:active {
+            transform: translate(3px, 3px);
+            box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 1);
+        }
+
+        .text-primary {
+            color: #1E3A8A;
+        }
+
+        .bg-primary {
+            background-color: #1E3A8A;
+        }
+
+        .bg-aksen {
+            background-color: #14B8A6;
+        }
+
+        .custom-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #000;
+            border: 2px solid #F1F5F9;
+        }
+
+        .category-btn.active {
+            background-color: #1E3A8A;
+            color: white;
+            border-color: black;
+            box-shadow: 3px 3px 0px 0px #000;
+        }
+    </style>
+</head>
+
+<body class="h-screen flex flex-col pt-16">
+
+    <nav class="flex-none bg-white border-b-4 border-black z-50 fixed top-0 w-full">
+        <div class="max-w-[1600px] mx-auto px-6 h-16 flex items-center justify-between">
+            <a href="{{ route('home') }}" class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-primary cartoon-border rounded-lg flex items-center justify-center cartoon-shadow-sm">
+                    <i data-lucide="layers" class="text-white w-4 h-4"></i>
+                </div>
+                <span class="text-lg font-black text-slate-900 tracking-tighter uppercase italic">Sewa<span class="text-primary">In</span></span>
+            </a>
+            <div class="flex items-center gap-6">
+                <a href="{{ route('home') }}" class="text-xs font-black text-slate-500 hover:text-primary transition-all uppercase italic">Beranda</a>
+                @auth
+                    <button onclick="toggleProfile()" class="flex items-center gap-3 bg-white p-1 pr-4 rounded-full border-2 border-slate-100 shadow-sm cartoon-button transition-all">
+                        <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white">
+                            <i data-lucide="user" class="w-4 h-4"></i>
+                        </div>
+                        <span class="hidden sm:inline text-[10px] font-black uppercase italic text-slate-900">
+                            {{ explode(' ', auth()->user()->nama)[0] }}
+                        </span>
+                    </button>
+                @endauth
+                @guest
+                    <a href="{{ route('login') }}" class="flex items-center gap-2 bg-white px-3 py-1 cartoon-border rounded-xl cartoon-shadow-sm font-black text-xs uppercase italic btn-cartoon-buy">
+                        <i data-lucide="log-in" class="w-4 h-4"></i>
+                        <span>Masuk</span>
+                    </a>
+                @endguest
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex flex-1 overflow-hidden mt-4">
+        <aside class="w-72 bg-white border-r-4 border-black p-6 hidden lg:flex flex-col">
+            <h3 class="text-[18px] font-black text-slate-400 uppercase tracking-widest mb-6 italic text-left">Kategori Alat</h3>
+            <nav class="space-y-3 flex-1" id="categoryNav">
+                <a href="{{ route('katalog.index') }}"
+                    class="category-btn {{ $kat_filter === 'Semua' ? 'active' : '' }} w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-black transition-all border-2 border-transparent hover:border-black uppercase italic text-left">
+                    Semua Alat
+                </a>
+                @foreach ($kategoriList as $kat)
+                <a href="{{ route('katalog.index', ['kategori' => $kat->kategori]) }}"
+                    class="category-btn {{ $kat_filter === $kat->kategori ? 'active' : '' }} w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-black transition-all border-2 border-transparent hover:border-black uppercase italic text-left">
+                    {{ $kat->kategori }}
+                </a>
+                @endforeach
+            </nav>
+
+            <a href="https://wa.me/6287776600292?text=*Halo%20MinSe,%20saya%20ingin%20tanya%20tentang%20alat%20di%20SewaIn*" target="_blank" class="fixed bottom-6 left-6 z-[99] group flex items-center animate-bounce">
+                 <div class="w-14 h-14 bg-[#25D366] border-[3px] border-black rounded-full shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center hover:-translate-y-1 active:translate-y-0.5 active:shadow-none transition-all duration-200">
+                    <i data-lucide="message-circle" class="w-8 h-8 text-white"></i>
+                </div>
+                <span class="ml-3 bg-black text-white text-[10px] font-black px-3 py-2 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity uppercase italic whitespace-nowrap border-2 border-white shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"> Tanya Admin</span>
+            </a>
+        </aside>
+
+        <main class="flex-1 overflow-y-auto custom-scroll p-8 bg-[#F1F5F9]">
+            <div class="max-w-[1400px] mx-auto text-left">
+                <div class="flex items-center justify-between mb-8">
+                    <div>
+                        <h1 id="kategoriTitle"
+                            class="text-3xl font-black text-slate-900 tracking-tight uppercase italic bg-yellow-300 inline-block px-2 cartoon-border">
+                            {{ $kat_filter === 'Semua' ? 'Semua Alat' : $kat_filter }}
+                            @if($search_filter) - "{{ $search_filter }}" @endif
+                        </h1>
+                        <p class="text-slate-500 text-xs font-black mt-2 uppercase italic">Menampilkan alat-alat pilihan terbaik</p>
+                    </div>
+                </div>
+
+                <div id="produkGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-24">
+                    @if (count($produk_array) === 0)
+                        <div class="col-span-full py-16 text-center text-slate-400 font-black uppercase italic">Tidak ada produk di kategori ini.</div>
+                    @else
+                        @foreach ($produk_array as $p)
+                            <div class="bg-white rounded-[2rem] p-5 cartoon-border cartoon-shadow hover:translate-y-[-4px] transition-all duration-300 group">
+                                <div class="bg-slate-100 cartoon-border rounded-[1.5rem] aspect-square mb-4 flex items-center justify-center relative overflow-hidden">
+                                    @if ($p->gambar)
+                                        <img src="{{ asset('storage/' . $p->gambar) }}" alt="{{ $p->nama_alat }}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                                    @else
+                                        <i data-lucide="package" class="text-slate-300 w-16 h-16 group-hover:scale-110 transition duration-500"></i>
+                                    @endif
+                                    <div class="absolute top-3 left-3 bg-aksen text-white text-[8px] font-black px-3 py-1 cartoon-border rounded-full uppercase">Tersedia</div>
+                                </div>
+                                <div class="px-1 text-left">
+                                    <p class="text-aksen font-black text-[10px] uppercase tracking-tighter italic">{{ $p->kategori ? $p->kategori->kategori : 'Umum' }}</p>
+                                    <h3 class="font-black text-sm text-slate-900 truncate uppercase italic">{{ $p->nama_alat }}</h3>
+                                    <div class="flex items-baseline gap-1 mt-1 mb-4">
+                                        <span class="text-xl font-black text-primary italic">Rp{{ number_format($p->harga_sewa, 0, ',', '.') }}</span>
+                                        <span class="text-slate-400 font-black text-[10px] uppercase">/hari</span>
+                                    </div>
+                                    <div class="flex gap-3">
+                                        <button onclick="openQtyModal({{ $p->idalat }}, '{{ addslashes($p->nama_alat) }}', {{ $p->harga_sewa }})" class="flex-none bg-yellow-300 text-black p-3 rounded-xl cartoon-border cartoon-shadow-sm cartoon-button transition-all">
+                                            <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+                                        </button>
+                                        <a href="{{ route('alat.detail', $p->idalat) }}" class="flex-1 bg-primary text-white py-3 rounded-xl font-black text-[9px] flex items-center justify-center gap-2 cartoon-border cartoon-shadow-sm cartoon-button uppercase italic tracking-widest">
+                                            DETAIL
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    @endif
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <a href="{{ route('keranjang.index') }}"
+        class="fixed bottom-8 right-8 z-[100] bg-aksen text-white px-8 py-5 rounded-2xl cartoon-border cartoon-shadow flex items-center gap-3 cartoon-button transition-all group">
+        <div class="relative">
+            <i data-lucide="shopping-bag" class="w-7 h-7 text-white"></i>
+            <span id="cartCount"
+                class="absolute -top-3 -right-3 bg-red-500 text-white text-[10px] font-black w-6 h-6 rounded-full flex items-center justify-center border-2 border-black animate-bounce invisible">0</span>
+        </div>
+        <span class="font-black text-sm tracking-tight uppercase italic">Lihat Keranjang</span>
+    </a>
+
+    <div id="profile-overlay" class="fixed inset-0 bg-black/50 z-[120] hidden transition-opacity duration-300 opacity-0" onclick="toggleProfile()"></div>
+
+    <div id="profile-panel" class="fixed top-0 right-0 h-full w-full sm:w-1/3 lg:w-1/4 bg-white z-[130] border-l-4 border-black translate-x-full transition-transform duration-500 ease-in-out flex flex-col">
+        @auth
+        <div class="p-6 border-b-4 border-black bg-yellow-300 flex justify-between items-center text-left">
+            <h2 class="text-xl font-black uppercase italic leading-none">Profil Saya</h2>
+            <button onclick="toggleProfile()" class="w-10 h-10 bg-white cartoon-border rounded-xl flex items-center justify-center cartoon-shadow-sm active:translate-y-1">
+                <i data-lucide="x" class="w-6 h-6 text-black"></i>
+            </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-6 space-y-6 text-left">
+            <div class="text-center space-y-3">
+                <div class="w-24 h-24 bg-primary cartoon-border rounded-3xl mx-auto flex items-center justify-center cartoon-shadow">
+                    <i data-lucide="user" class="text-white w-12 h-12"></i>
+                </div>
+                <div>
+                    <h3 id="profile-name" class="font-black text-lg uppercase italic text-black">{{ auth()->user()->nama }}</h3>
+                    <span class="text-[10px] font-bold bg-aksen cartoon-border px-3 py-1 rounded-full uppercase">Penyewa</span>
+                </div>
+            </div>
+
+            <hr class="border-2 border-black border-dashed">
+
+            <div class="space-y-4">
+                <div class="space-y-1">
+                    <span class="text-[10px] font-black text-gray-400 uppercase italic">Email</span>
+                    <p id="profile-email" class="font-bold text-sm text-black">{{ auth()->user()->email }}</p>
+                </div>
+                <div class="space-y-1">
+                    <span class="text-[10px] font-black text-gray-400 uppercase italic">No. Telepon</span>
+                    <p id="profile-phone" class="font-bold text-sm text-black">{{ auth()->user()->notelp ?? '-' }}</p>
+                </div>
+            </div>
+
+            <div class="pt-4 space-y-3">
+                @if(auth()->user()->role === 'admin')
+                    <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 p-4 bg-slate-100 cartoon-border rounded-2xl font-black text-xs uppercase italic hover:bg-yellow-50 transition-colors">
+                        <i data-lucide="layout-dashboard" class="w-4 h-4 text-primary"></i> Dashboard Admin
+                    </a>
+                @elseif(auth()->user()->role === 'owner')
+                    <a href="{{ route('owner.dashboard') }}" class="flex items-center gap-3 p-4 bg-slate-100 cartoon-border rounded-2xl font-black text-xs uppercase italic hover:bg-yellow-50 transition-colors">
+                        <i data-lucide="layout-dashboard" class="w-4 h-4 text-primary"></i> Dashboard Owner
+                    </a>
+                @endif
+                <a href="{{ route('riwayat.sewa') }}" class="flex items-center gap-3 p-4 bg-slate-100 cartoon-border rounded-2xl font-black text-xs uppercase italic hover:bg-yellow-50 transition-colors">
+                    <i data-lucide="history" class="w-4 h-4 text-primary"></i> Riwayat Sewa
+                </a>
+            </div>
+        </div>
+
+        <div class="p-6 border-t-4 border-black">
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="w-full bg-red-500 text-white py-4 rounded-2xl cartoon-border cartoon-shadow-sm font-black text-center block uppercase italic hover:bg-red-600 transition-colors">
+                    Keluar
+                </button>
+            </form>
+        </div>
+        @endauth
+    </div>
+
+    <div id="qtyModal" class="fixed inset-0 z-[110] hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeQtyModal()"></div>
+        <div class="bg-white w-full max-w-xs rounded-[2.5rem] p-8 cartoon-border cartoon-shadow relative z-20 text-center">
+            <h4 id="qtyModalTitle" class="font-black text-slate-900 text-lg mb-2 uppercase italic leading-tight">Jumlah Sewa</h4>
+            <p id="qtyModalPrice" class="text-primary font-black text-base mb-6 italic bg-yellow-100 inline-block px-2">Rp0/hari</p>
+            <div class="flex items-center bg-slate-50 rounded-2xl p-2 cartoon-border mb-6">
+                <button onclick="changeModalQty(-1)" class="w-12 h-12 flex items-center justify-center text-slate-900 font-black text-2xl">-</button>
+                <input type="number" id="modalQtyInput" value="1" class="w-full bg-transparent text-center text-xl font-black text-slate-900 outline-none" readonly>
+                <button onclick="changeModalQty(1)" class="w-12 h-12 flex items-center justify-center text-slate-900 font-black text-2xl">+</button>
+            </div>
+            <button id="confirmAddBtn" class="w-full bg-primary text-white py-4 rounded-2xl font-black text-[11px] tracking-widest cartoon-border cartoon-shadow-sm cartoon-button uppercase italic">
+                TAMBAHKAN KE KERANJANG
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let currentSelectedAlat = null;
+
+        function openQtyModal(id, nama, harga) {
+            currentSelectedAlat = { id, nama, harga };
+            document.getElementById('qtyModalTitle').innerText = "Sewa " + nama;
+            document.getElementById('qtyModalPrice').innerText = "Rp" + harga.toLocaleString('id-ID') + "/hari";
+            document.getElementById('modalQtyInput').value = 1;
+            document.getElementById('qtyModal').classList.remove('hidden');
+        }
+
+        function closeQtyModal() { document.getElementById('qtyModal').classList.add('hidden'); }
+
+        function changeModalQty(delta) {
+            const input = document.getElementById('modalQtyInput');
+            let val = parseInt(input.value) + delta;
+            if (val < 1) val = 1;
+            input.value = val;
+        }
+
+        function showGuestAlert(message = "Silakan Masuk Terlebih Dahulu") {
+            const overlay = document.createElement('div');
+            overlay.className = "fixed inset-0 bg-black/60 backdrop-blur-sm z-[300] flex items-center justify-center p-6";
+            document.body.appendChild(overlay);
+
+            const toast = document.createElement('div');
+            toast.className = "bg-white cartoon-border cartoon-shadow p-10 flex flex-col items-center gap-6 text-center w-full max-w-[400px]";
+            toast.innerHTML = `
+                <div class="w-20 h-20 bg-primary cartoon-border rounded-full flex items-center justify-center text-white cartoon-shadow-sm">
+                    <i data-lucide="lock" class="w-10 h-10"></i>
+                </div>
+                <div>
+                    <h4 class="font-black text-xl uppercase italic mb-2">Akses Terbatas!</h4>
+                    <p class="text-xs font-bold text-slate-500 uppercase tracking-tight italic">${message}</p>
+                </div>
+                <div class="w-full bg-yellow-300 cartoon-border px-4 py-2 font-black text-[10px] uppercase italic">Mengalihkan ke halaman login...</div>
+            `;
+            overlay.appendChild(toast);
+            lucide.createIcons();
+            setTimeout(() => window.location.href = "{{ route('login') }}", 2000);
+        }
+
+        function konfirmasiTambah() {
+            @guest
+                showGuestAlert("Silakan Masuk Terlebih Dahulu Untuk Menambahkan ke Keranjang");
+                return;
+            @endguest
+
+            const qty = parseInt(document.getElementById('modalQtyInput').value);
+
+            fetch('{{ route("keranjang.add") }}', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: `idalat=${currentSelectedAlat.id}&jumlah=${qty}`
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    updateBadge(data.total_items);
+                    closeQtyModal();
+                    const toast = document.createElement('div');
+                    toast.className = "fixed top-5 left-1/2 -translate-x-1/2 z-[200] bg-yellow-300 cartoon-border cartoon-shadow px-6 py-3 font-black uppercase italic text-xs animate-bounce";
+                    toast.innerText = `🚀 ${qty} ${currentSelectedAlat.nama} Berhasil Masuk Keranjang!`;
+                    document.body.appendChild(toast);
+                    setTimeout(() => toast.remove(), 2500);
+                } else {
+                    const toast = document.createElement('div');
+                    toast.className = "fixed top-5 left-1/2 -translate-x-1/2 z-[200] bg-red-400 text-white cartoon-border cartoon-shadow px-6 py-3 font-black uppercase italic text-xs animate-bounce";
+                    toast.innerText = `❌ ${data.message || 'Gagal menambahkan'}`;
+                    document.body.appendChild(toast);
+                    setTimeout(() => toast.remove(), 2500);
+                }
+            });
+        }
+
+        function updateBadge(count) {
+            const badge = document.getElementById('cartCount');
+            if (badge) {
+                badge.innerText = count;
+                badge.classList.toggle('invisible', count <= 0);
+            }
+        }
+
+        document.getElementById('confirmAddBtn').onclick = konfirmasiTambah;
+
+        function toggleProfile() {
+            const panel = document.getElementById('profile-panel');
+            const overlay = document.getElementById('profile-overlay');
+            if (panel.classList.contains('translate-x-full')) {
+                panel.classList.remove('translate-x-full');
+                overlay.classList.remove('hidden');
+                setTimeout(() => overlay.classList.add('opacity-100'), 10);
+                document.body.style.overflow = 'hidden';
+            } else {
+                panel.classList.add('translate-x-full');
+                overlay.classList.remove('opacity-100');
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                    document.body.style.overflow = 'auto';
+                }, 300);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+             fetch('{{ route("keranjang.count") }}')
+             .then(res => res.json())
+             .then(data => updateBadge(data.count));
+             lucide.createIcons();
+        });
+    </script>
+</body>
+
+</html>
