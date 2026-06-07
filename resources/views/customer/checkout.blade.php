@@ -152,7 +152,7 @@
                             readonly placeholder="Nomor WhatsApp">
                             
                         <textarea id="userAddress" name="alamat_sewa" required placeholder="Titik lokasi di peta atau isi alamat lengkap..."
-                            class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs font-bold outline-none focus:border-aksen h-24 placeholder:italic placeholder:font-normal"></textarea>
+                            class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs font-bold outline-none focus:border-aksen h-24 placeholder:italic placeholder:font-normal">{{ old('alamat_sewa', $user_data->alamat ?? '') }}</textarea>
                     </div>
 
                     <div class="space-y-4">

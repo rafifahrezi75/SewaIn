@@ -1,11 +1,11 @@
 @extends('layouts.admin')
 
-@section('title', 'Pelanggan UMKM')
+@section('title', 'Pelanggan')
 
 @section('content')
 <div>
     <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
-        <h2 class="text-2xl font-bold text-gray-800">Data Pelanggan UMKM</h2>
+        <h2 class="text-2xl font-bold text-gray-800">Data Pelanggan</h2>
         
         <form method="GET" action="{{ route('admin.pelanggan') }}" class="flex flex-wrap items-center gap-3">
             <div class="relative w-full sm:w-auto flex-1 sm:flex-none">
@@ -20,10 +20,10 @@
                 </a>
                 @endif
                 <button type="submit" class="rounded-xl bg-gray-100 text-gray-600 px-4 py-2 text-sm font-medium hover:bg-gray-200 transition-colors focus:outline-none">Cari</button>
-                <button type="button" class="flex shrink-0 items-center gap-2 rounded-xl bg-white border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition-all hover:bg-gray-50 focus:outline-none shadow-sm">
+                <a href="{{ route('admin.pelanggan.export', request()->query()) }}" class="flex shrink-0 items-center gap-2 rounded-xl bg-white border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition-all hover:bg-gray-50 focus:outline-none shadow-sm">
                     <i class='bx bx-export text-lg text-gray-500'></i>
                     <span class="hidden sm:inline">Export</span>
-                </button>
+                </a>
             </div>
         </form>
     </div>
@@ -34,7 +34,7 @@
             <table class="w-full text-left text-sm text-gray-500">
                 <thead class="bg-gray-50/50 text-xs uppercase text-gray-400 border-b border-gray-100">
                     <tr>
-                        <th scope="col" class="px-6 py-4 font-semibold tracking-wider">Nama UMKM / Owner</th>
+                        <th scope="col" class="px-6 py-4 font-semibold tracking-wider">Nama Pelanggan</th>
                         <th scope="col" class="px-6 py-4 font-semibold tracking-wider">Kontak</th>
                         <th scope="col" class="px-6 py-4 font-semibold tracking-wider">Alamat Lengkap</th>
                         <th scope="col" class="px-6 py-4 font-semibold tracking-wider">Bergabung</th>
@@ -50,7 +50,7 @@
                                 </div>
                                 <div>
                                     <span class="block font-medium text-gray-900">{{ $pelanggan->nama }}</span>
-                                    <span class="text-xs text-gray-500">ID: UMKM-{{ str_pad($pelanggan->id_user, 4, '0', STR_PAD_LEFT) }}</span>
+                                    <span class="text-xs text-gray-500">ID: PLG-{{ str_pad($pelanggan->id_user, 4, '0', STR_PAD_LEFT) }}</span>
                                 </div>
                             </div>
                         </td>
@@ -58,8 +58,8 @@
                             <i class='bx bx-phone mr-1 text-gray-400'></i> {{ $pelanggan->notelp ?? '-' }}<br>
                             <span class="text-gray-400 mt-1 block">{{ $pelanggan->email }}</span>
                         </td>
-                        <td class="px-6 py-4 text-xs text-gray-600 max-w-xs truncate">
-                            -
+                        <td class="px-6 py-4 text-xs text-gray-600 max-w-xs truncate" title="{{ $pelanggan->alamat }}">
+                            {{ $pelanggan->alamat ?? '-' }}
                         </td>
                         <td class="px-6 py-4 text-xs text-gray-500">
                             {{ $pelanggan->created_at ? $pelanggan->created_at->format('d M Y') : '-' }}
@@ -67,7 +67,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="4" class="px-6 py-8 text-center text-gray-500">Belum ada data pelanggan UMKM.</td>
+                        <td colspan="4" class="px-6 py-8 text-center text-gray-500">Belum ada data pelanggan.</td>
                     </tr>
                     @endforelse
                 </tbody>

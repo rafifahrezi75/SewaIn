@@ -53,6 +53,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/checkout/sukses/{id}', [CustomerController::class, 'checkoutSukses'])->name('checkout.sukses');
     
     Route::get('/riwayat-sewa', [CustomerController::class, 'riwayat'])->name('riwayat.sewa');
+    Route::get('/profil', [CustomerController::class, 'editProfile'])->name('profil.edit');
+    Route::post('/profil/update', [CustomerController::class, 'updateProfile'])->name('profil.update');
 });
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
@@ -80,6 +82,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/pengembalian', [PengembalianController::class, 'index'])->name('admin.pengembalian');
     Route::post('/admin/pengembalian/validasi', [PengembalianController::class, 'validasi'])->name('admin.pengembalian.validasi');
     Route::get('/admin/pelanggan', [PelangganController::class, 'index'])->name('admin.pelanggan');
+    Route::get('/admin/pelanggan/export', [PelangganController::class, 'export'])->name('admin.pelanggan.export');
     Route::get('/admin/pengaturan', function () { return view('admin.pengaturan'); });
 });
 

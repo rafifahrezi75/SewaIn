@@ -197,11 +197,14 @@ class CustomerController extends Controller
             return redirect()->route('keranjang.index');
         }
 
+        $user_data = Auth::user();
+        if (empty($user_data->notelp) || empty($user_data->alamat)) {
+            return redirect()->route('profil.edit')->with('error', 'Silakan lengkapi nomor telepon dan alamat terlebih dahulu sebelum melanjutkan checkout.');
+        }
+
         $subtotal_alat = $items->sum(function ($item) {
             return $item->alat->harga_sewa * $item->jumlah;
         });
-
-        $user_data = Auth::user();
 
         return view('customer.checkout', compact('items', 'subtotal_alat', 'user_data'));
     }
@@ -350,5 +353,35 @@ class CustomerController extends Controller
             ->get();
 
         return view('customer.riwayat', compact('q_aktif', 'q_selesai'));
+    }
+
+    /**
+     * Edit Profile Page
+     */
+    public function editProfile()
+    {
+        $user_data = Auth::user();
+        return view('customer.profil', compact('user_data'));
+    }
+
+    /**
+     * Update Profile Process
+     */
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
+        
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'notelp' => 'required|string|max:20',
+            'alamat' => 'required|string',
+        ]);
+
+        $user->nama = $request->nama;
+        $user->notelp = $request->notelp;
+        $user->alamat = $request->alamat;
+        $user->save();
+
+        return redirect()->route('profil.edit')->with('success', 'Profil Anda berhasil diperbarui.');
     }
 }

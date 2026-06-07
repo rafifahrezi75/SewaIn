@@ -14,8 +14,17 @@ class OwnerTransaksiController extends Controller
 
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('idsewa', 'like', "%{$search}%")
+            
+            // Ekstrak ID numerik jika input pencarian sesuai format invoice (INV-0002 atau 0002)
+            $searchId = $search;
+            if (preg_match('/^inv-0*(\d+)$/i', trim($search), $matches)) {
+                $searchId = $matches[1];
+            } elseif (preg_match('/^0+(\d+)$/', trim($search), $matches)) {
+                $searchId = $matches[1];
+            }
+
+            $query->where(function($q) use ($search, $searchId) {
+                $q->where('idsewa', 'like', "%{$searchId}%")
                   ->orWhereHas('user', function($uq) use ($search) {
                       $uq->where('nama', 'like', "%{$search}%");
                   });
@@ -31,11 +40,11 @@ class OwnerTransaksiController extends Controller
         }
 
         if ($request->filled('tgl_awal')) {
-            $query->whereDate('created_at', '>=', $request->tgl_awal);
+            $query->whereDate('tanggal_mulai', '>=', $request->tgl_awal);
         }
 
         if ($request->filled('tgl_akhir')) {
-            $query->whereDate('created_at', '<=', $request->tgl_akhir);
+            $query->whereDate('tanggal_selesai', '<=', $request->tgl_akhir);
         }
 
         $transaksi = $query->orderByDesc('created_at')->paginate(10);

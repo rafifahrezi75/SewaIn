@@ -12,11 +12,11 @@ class LaporanController extends Controller
         $query = Penyewaan::with(['user', 'details.alat']);
 
         if ($request->filled('tgl_awal')) {
-            $query->whereDate('created_at', '>=', $request->tgl_awal);
+            $query->whereDate('tanggal_mulai', '>=', $request->tgl_awal);
         }
 
         if ($request->filled('tgl_akhir')) {
-            $query->whereDate('created_at', '<=', $request->tgl_akhir);
+            $query->whereDate('tanggal_selesai', '<=', $request->tgl_akhir);
         }
 
         if ($request->has('print')) {

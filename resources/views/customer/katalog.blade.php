@@ -228,6 +228,9 @@
                 <a href="{{ route('riwayat.sewa') }}" class="flex items-center gap-3 p-4 bg-slate-100 cartoon-border rounded-2xl font-black text-xs uppercase italic hover:bg-yellow-50 transition-colors">
                     <i data-lucide="history" class="w-4 h-4 text-primary"></i> Riwayat Sewa
                 </a>
+                <a href="{{ route('profil.edit') }}" class="flex items-center gap-3 p-4 bg-slate-100 cartoon-border rounded-2xl font-black text-xs uppercase italic hover:bg-yellow-50 transition-colors">
+                    <i data-lucide="edit-3" class="w-4 h-4 text-primary"></i> Edit Profil
+                </a>
             </div>
         </div>
 

@@ -16,6 +16,7 @@ class UserSeeder extends Seeder
             'nama' => 'Admin SewaIn',
             'email' => 'admin@sewain.com',
             'notelp' => '081234567890',
+            'alamat' => 'Jl. Jenderal Sudirman No. 1, Jakarta',
             'password' => \Illuminate\Support\Facades\Hash::make('password'),
             'role' => 'admin',
         ]);
@@ -24,6 +25,7 @@ class UserSeeder extends Seeder
             'nama' => 'Owner SewaIn',
             'email' => 'owner@sewain.com',
             'notelp' => '081234567891',
+            'alamat' => 'Jl. Gatot Subroto No. 10, Jakarta',
             'password' => \Illuminate\Support\Facades\Hash::make('password'),
             'role' => 'owner',
         ]);
@@ -32,6 +34,7 @@ class UserSeeder extends Seeder
             'nama' => 'Pelanggan 1',
             'email' => 'user@sewain.com',
             'notelp' => '081234567892',
+            'alamat' => 'Jl. Dharmahusada Indah Timur No. 23, Surabaya',
             'password' => \Illuminate\Support\Facades\Hash::make('password'),
             'role' => 'user',
         ]);

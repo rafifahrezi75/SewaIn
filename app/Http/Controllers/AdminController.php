@@ -24,7 +24,7 @@ class AdminController extends Controller
             ->whereDate('tanggal_selesai', '<', Carbon::now())
             ->count();
             
-        $totalUmkm = User::where('role', 'pelanggan')->count();
+        $totalPelanggan = User::where('role', 'user')->count();
 
         // Chart Data - Statistik Penyewaan (12 bulan tahun ini)
         $year = Carbon::now()->year;
@@ -47,11 +47,35 @@ class AdminController extends Controller
         $pieLabels = $kategoriStats->pluck('kategori')->toArray();
         $pieData = $kategoriStats->pluck('alat_count')->toArray();
 
-        // Recent Transactions
-        $recentTransactions = Penyewaan::with('user')
-            ->orderBy('created_at', 'desc')
-            ->take(5)
-            ->get();
+        // Recent Activities
+        $recentAlat = Alat::orderBy('created_at', 'desc')->take(5)->get()->map(function($item) {
+            return [
+                'deskripsi' => "Alat {$item->nama_alat} ditambahkan",
+                'waktu' => $item->created_at,
+            ];
+        });
+
+        $recentKategori = Kategori::orderBy('updated_at', 'desc')->take(5)->get()->map(function($item) {
+            $action = $item->created_at && $item->created_at->eq($item->updated_at) ? 'ditambahkan' : 'diperbarui';
+            return [
+                'deskripsi' => "Kategori {$item->kategori} {$action}",
+                'waktu' => $item->updated_at ?: $item->created_at ?: now(),
+            ];
+        });
+
+        $recentUsers = User::where('role', 'user')->orderBy('created_at', 'desc')->take(5)->get()->map(function($item) {
+            return [
+                'deskripsi' => "Pelanggan baru didaftarkan",
+                'waktu' => $item->created_at ?: now(),
+            ];
+        });
+
+        $recentActivities = collect()
+            ->concat($recentAlat)
+            ->concat($recentKategori)
+            ->concat($recentUsers)
+            ->sortByDesc('waktu')
+            ->take(5);
 
         // Stock Analytics
         $totalStokAlat = Alat::sum('stok');
@@ -64,11 +88,11 @@ class AdminController extends Controller
             'pendingPesanan',
             'penyewaanAktif',
             'terlambat',
-            'totalUmkm',
+            'totalPelanggan',
             'chartRentalsData',
             'pieLabels',
             'pieData',
-            'recentTransactions',
+            'recentActivities',
             'totalStokAlat',
             'stokDisewa'
         ));

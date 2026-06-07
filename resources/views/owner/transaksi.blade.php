@@ -51,7 +51,7 @@
             <table class="w-full text-left text-sm text-gray-500 whitespace-nowrap">
                 <thead class="bg-gray-50/50 text-xs uppercase text-gray-400 border-b border-gray-100">
                     <tr>
-                        <th scope="col" class="px-6 py-4 font-semibold tracking-wider">Invoice & UMKM</th>
+                        <th scope="col" class="px-6 py-4 font-semibold tracking-wider">Invoice & Pelanggan</th>
                         <th scope="col" class="px-6 py-4 font-semibold tracking-wider">Item Disewa</th>
                         <th scope="col" class="px-6 py-4 font-semibold tracking-wider">Periode</th>
                         <th scope="col" class="px-6 py-4 font-semibold tracking-wider">Metode</th>
@@ -83,7 +83,7 @@
                         </td>
                         <td class="px-6 py-4">
                             <span class="inline-flex items-center gap-1 rounded bg-gray-100 px-2 py-1 text-[10px] font-semibold text-gray-600 uppercase">
-                                <i class='bx {{ strtolower($trx->metode_pengiriman) == 'diantar' ? 'bx-truck' : 'bx-store' }}'></i> {{ $trx->metode_pengiriman }}
+                                <i class='bx {{ str_contains(strtolower($trx->metode_pengiriman), 'antar') ? 'bx-truck' : 'bx-store' }}'></i> {{ $trx->metode_pengiriman }}
                             </span>
                         </td>
                         <td class="px-6 py-4 font-medium text-gray-900">
@@ -300,7 +300,7 @@
                     <div>
                         <label class="mb-2 block text-sm font-semibold text-gray-700">Metode Pengiriman</label>
                         <div class="flex gap-2">
-                            @php $metodes = ['diantar' => 'Diantar', 'ambil_sendiri' => 'Ambil Sendiri']; @endphp
+                            @php $metodes = ['Antar Lokasi' => 'Diantar', 'Ambil Sendiri' => 'Ambil Sendiri']; @endphp
                             @foreach($metodes as $val => $label)
                             <label class="relative flex cursor-pointer items-center gap-2 rounded-xl border border-gray-200 p-2.5 transition hover:bg-gray-50 has-[:checked]:border-brand-500 has-[:checked]:bg-brand-50 flex-1">
                                 <input type="checkbox" name="metode_pengiriman[]" value="{{ $val }}" {{ in_array($val, (array)request('metode_pengiriman')) ? 'checked' : '' }} class="accent-brand-500 rounded text-brand-600 focus:ring-brand-500 border-gray-300">

@@ -58,8 +58,8 @@
     <div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-100 transition-shadow hover:shadow-md">
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-sm font-medium text-gray-500">Total UMKM</p>
-                <h3 class="mt-2 text-3xl font-bold text-gray-800">{{ $totalUmkm }}</h3>
+                <p class="text-sm font-medium text-gray-500">Total Pelanggan</p>
+                <h3 class="mt-2 text-3xl font-bold text-gray-800">{{ $totalPelanggan }}</h3>
             </div>
             <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-50 text-2xl text-blue-500 shadow-inner">
                 <i class='bx bx-group'></i>
@@ -98,62 +98,34 @@
 
 <!-- Analytics & Recent Transactions Section -->
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-    <!-- Recent Transactions Table -->
+    <!-- Recent Activities Table -->
     <div class="lg:col-span-2 bg-white rounded-3xl p-6 shadow-sm ring-1 ring-gray-100">
         <div class="flex items-center justify-between mb-6">
-            <h2 class="text-xl font-bold text-gray-800">Penyewaan Terbaru</h2>
-            <a href="#" class="text-sm font-medium text-brand-500 hover:text-brand-600 focus:outline-none">Lihat Semua</a>
+            <h2 class="text-xl font-bold text-gray-800">Aktivitas Terbaru</h2>
         </div>
 
         <div class="overflow-x-auto">
             <table class="w-full text-left text-sm text-gray-500">
                 <thead class="bg-gray-50/50 text-xs uppercase text-gray-400 border-b border-gray-100">
                     <tr>
-                        <th scope="col" class="px-4 py-3 font-semibold tracking-wider">ID / Penyewa</th>
-                        <th scope="col" class="px-4 py-3 font-semibold tracking-wider">Tanggal Mulai</th>
-                        <th scope="col" class="px-4 py-3 font-semibold tracking-wider">Metode</th>
-                        <th scope="col" class="px-4 py-3 font-semibold tracking-wider text-right">Status</th>
+                        <th scope="col" class="px-4 py-3 font-semibold tracking-wider">Aktivitas</th>
+                        <th scope="col" class="px-4 py-3 font-semibold tracking-wider text-right">Waktu</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100">
-                    @forelse($recentTransactions as $transaksi)
+                <tbody class="divide-y divide-gray-100 text-gray-700">
+                    @forelse($recentActivities as $activity)
                     <tr class="hover:bg-gray-50/50 transition-colors">
-                        <td class="px-4 py-3">
-                            <div class="font-medium text-gray-900 border-b border-gray-100 pb-0.5 mb-0.5 inline-block">
-                                INV-{{ str_pad($transaksi->idsewa, 4, '0', STR_PAD_LEFT) }}
-                            </div>
-                            <div class="text-xs">{{ $transaksi->user->nama ?? 'Unknown User' }}</div>
+                        <td class="px-4 py-4 font-medium text-gray-900">
+                            {{ $activity['deskripsi'] }}
                         </td>
-                        <td class="px-4 py-3 text-xs">
-                            <i class='bx bx-calendar mr-1 text-gray-400'></i> {{ \Carbon\Carbon::parse($transaksi->tanggal_mulai)->format('d M Y') }}
-                        </td>
-                        <td class="px-4 py-3">
-                            <span class="inline-flex items-center gap-1 rounded bg-gray-100 px-2 py-1 text-[10px] font-semibold text-gray-600 uppercase">
-                                @if($transaksi->metode_pengiriman == 'diantar')
-                                    <i class='bx bx-truck'></i> Diantar
-                                @else
-                                    <i class='bx bx-store'></i> Ambil Sendiri
-                                @endif
-                            </span>
-                        </td>
-                        <td class="px-4 py-3 text-right">
-                            @php
-                                $statusClass = match(strtolower($transaksi->status)) {
-                                    'pending' => 'bg-orange-100 text-orange-600',
-                                    'disewa' => 'bg-blue-100 text-blue-600',
-                                    'selesai' => 'bg-green-100 text-green-600',
-                                    'batal' => 'bg-red-100 text-red-600',
-                                    default => 'bg-gray-100 text-gray-600'
-                                };
-                            @endphp
-                            <span class="inline-block rounded-full {{ $statusClass }} px-2.5 py-0.5 text-[10px] font-semibold uppercase">
-                                {{ $transaksi->status }}
-                            </span>
+                        <td class="px-4 py-4 text-xs text-right text-gray-500">
+                            <i class='bx bx-time-five mr-1 text-gray-400'></i>
+                            {{ \Carbon\Carbon::parse($activity['waktu'])->translatedFormat('d M Y') }}
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="4" class="px-4 py-8 text-center text-gray-500">Belum ada transaksi terbaru.</td>
+                        <td colspan="2" class="px-4 py-8 text-center text-gray-500">Belum ada aktivitas terbaru.</td>
                     </tr>
                     @endforelse
                 </tbody>

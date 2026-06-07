@@ -12,12 +12,18 @@
     <!-- SECTION 1: ANTREAN -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
         <h2 class="text-2xl font-bold text-gray-800">Antrean Validasi</h2>
-        <div class="flex items-center gap-3">
+        <form method="GET" action="{{ route('owner.pengembalian') }}" class="flex items-center gap-3">
             <div class="relative">
                 <i class='bx bx-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-lg'></i>
-                <input type="text" placeholder="Cari invoice..." class="pl-10 pr-4 py-2 w-full sm:w-64 rounded-xl border border-gray-200 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 transition-colors">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari invoice atau penyewa..." class="pl-10 pr-4 py-2 w-full sm:w-64 rounded-xl border border-gray-200 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 transition-colors">
             </div>
-        </div>
+            @if(request()->filled('search'))
+                <a href="{{ route('owner.pengembalian') }}" class="rounded-xl bg-red-50 text-red-600 px-4 py-2 text-sm font-medium hover:bg-red-100 transition-colors focus:outline-none border border-red-100 flex items-center justify-center">
+                    Reset
+                </a>
+            @endif
+            <button type="submit" class="rounded-xl bg-brand-500 text-white px-4 py-2 text-sm font-medium hover:bg-brand-600 transition-colors focus:outline-none shadow-sm">Cari</button>
+        </form>
     </div>
 
     <div class="bg-white rounded-2xl shadow-sm ring-1 ring-gray-100 overflow-hidden mb-10">
@@ -25,7 +31,7 @@
             <table class="w-full text-left text-sm text-gray-500 whitespace-nowrap">
                 <thead class="bg-gray-50/50 text-xs uppercase text-gray-400 border-b border-gray-100 font-semibold tracking-wider">
                     <tr>
-                        <th scope="col" class="px-6 py-4">Invoice & UMKM</th>
+                        <th scope="col" class="px-6 py-4">Invoice & Pelanggan</th>
                         <th scope="col" class="px-6 py-4">Tenggat Waktu</th>
                         <th scope="col" class="px-6 py-4">Status Waktu</th>
                         <th scope="col" class="px-6 py-4">Progres</th>

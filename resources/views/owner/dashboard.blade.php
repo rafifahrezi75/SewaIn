@@ -149,7 +149,7 @@
                         </td>
                         <td class="px-4 py-3">
                             <span class="inline-flex items-center gap-1 rounded bg-gray-100 px-2 py-1 text-[10px] font-semibold text-gray-600 uppercase">
-                                <i class='bx {{ strtolower($trx->metode_pengiriman) == 'diantar' ? 'bx-truck' : 'bx-store' }}'></i> {{ $trx->metode_pengiriman }}
+                                <i class='bx {{ str_contains(strtolower($trx->metode_pengiriman), 'antar') ? 'bx-truck' : 'bx-store' }}'></i> {{ $trx->metode_pengiriman }}
                             </span>
                         </td>
                         <td class="px-4 py-3 text-right">

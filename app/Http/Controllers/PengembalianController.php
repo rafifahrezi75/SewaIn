@@ -12,10 +12,37 @@ class PengembalianController extends Controller
     public function index(Request $request)
     {
         // Antrean Validasi (Status: disewa)
-        $antrean = Penyewaan::with(['user'])->where('status', 'disewa')->orderBy('tanggal_selesai', 'asc')->get();
+        $antreanQuery = Penyewaan::with(['user'])->where('status', 'disewa');
 
         // Riwayat Pengembalian Selesai
-        $riwayat = Pengembalian::with(['penyewaan.user'])->orderBy('tanggal_kembali', 'desc')->get();
+        $riwayatQuery = Pengembalian::with(['penyewaan.user']);
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            
+            // Ekstrak ID numerik jika input pencarian sesuai format invoice (INV-0002, #0002, atau 0002)
+            $searchId = $search;
+            if (preg_match('/^(?:inv-|#)?0*(\d+)$/i', trim($search), $matches)) {
+                $searchId = $matches[1];
+            }
+
+            $antreanQuery->where(function($q) use ($search, $searchId) {
+                $q->where('idsewa', 'like', "%{$searchId}%")
+                  ->orWhereHas('user', function($uq) use ($search) {
+                      $uq->where('nama', 'like', "%{$search}%");
+                  });
+            });
+
+            $riwayatQuery->where(function($q) use ($search, $searchId) {
+                $q->where('id_sewa', 'like', "%{$searchId}%")
+                  ->orWhereHas('penyewaan.user', function($uq) use ($search) {
+                      $uq->where('nama', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $antrean = $antreanQuery->orderBy('tanggal_selesai', 'asc')->get();
+        $riwayat = $riwayatQuery->orderBy('tanggal_kembali', 'desc')->get();
 
         $view = auth()->user()->role === 'admin' ? 'admin.pengembalian' : 'owner.pengembalian';
         return view($view, compact('antrean', 'riwayat'));
