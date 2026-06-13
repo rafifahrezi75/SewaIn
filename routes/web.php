@@ -9,6 +9,7 @@ use App\Http\Controllers\AlatController;
 use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\OwnerController;
 use App\Http\Controllers\OwnerTransaksiController;
+use App\Http\Controllers\AdminOwnerController;
 
 use App\Http\Controllers\PengembalianController;
 use App\Http\Controllers\CustomerController;
@@ -84,6 +85,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/pelanggan', [PelangganController::class, 'index'])->name('admin.pelanggan');
     Route::get('/admin/pelanggan/export', [PelangganController::class, 'export'])->name('admin.pelanggan.export');
     Route::get('/admin/pengaturan', function () { return view('admin.pengaturan'); });
+    Route::get('/admin/admin-owner', [AdminOwnerController::class, 'index'])->name('admin.admin-owner');
+    Route::post('/admin/admin-owner', [AdminOwnerController::class, 'store'])->name('admin.admin-owner.store');
+    Route::put('/admin/admin-owner/update', [AdminOwnerController::class, 'update'])->name('admin.admin-owner.update');
+    Route::delete('/admin/admin-owner/{id}', [AdminOwnerController::class, 'destroy'])->name('admin.admin-owner.destroy');
 });
 
 Route::middleware(['auth', 'role:owner'])->group(function () {

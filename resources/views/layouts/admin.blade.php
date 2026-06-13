@@ -72,6 +72,14 @@
                     <div x-show="sidebarOpen" class="ml-auto flex h-2 w-2 shrink-0 rounded-full bg-brand-500"></div>
                     @endif
                 </a>
+
+                <a href="{{ url('admin/admin-owner') }}" class="flex items-center gap-3 rounded-xl px-4 py-3 font-medium transition-all focus:outline-none {{ request()->is('admin/admin-owner') ? 'bg-white text-brand-700 shadow-sm' : 'text-white hover:bg-brand-600 focus:bg-brand-600' }}" :class="sidebarOpen ? 'justify-start' : 'md:justify-center px-0'">
+                    <i class="bx bx-user-check text-xl shrink-0 {{ request()->is('admin/admin-owner') ? '' : 'opacity-80' }}"></i>
+                    <span x-show="sidebarOpen" class="whitespace-nowrap">Admin & Owner</span>
+                    @if(request()->is('admin/admin-owner'))
+                    <div x-show="sidebarOpen" class="ml-auto flex h-2 w-2 shrink-0 rounded-full bg-brand-500"></div>
+                    @endif
+                </a>
             </nav>
 
             <!-- Sidebar Footer -->
