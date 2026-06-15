@@ -112,10 +112,6 @@
 
                 <!-- Right Side Topbar -->
                 <div class="flex items-center gap-3 sm:gap-5 text-white">
-                    <button class="relative rounded-lg p-2 hover:bg-brand-600 transition focus:outline-none">
-                        <i class='bx bx-bell text-xl'></i>
-                        <span class="absolute right-1.5 top-1.5 flex h-2.5 w-2.5 items-center justify-center rounded-full bg-[#f9db72] border-2 border-brand-500"></span>
-                    </button>
                     
                     <div class="flex items-center gap-3 pl-3 sm:pl-5 relative before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-8 before:w-px before:bg-brand-400">
                         <div class="hidden sm:flex flex-col text-right justify-center">
