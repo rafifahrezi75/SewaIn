@@ -369,9 +369,12 @@
                                 Tersedia</div>
                         </div>
                         <div class="space-y-1">
-                            <p class="text-aksen font-black text-[9px] uppercase italic">
-                                {{ $alat->kategori ? $alat->kategori->kategori : 'Umum' }}
-                            </p>
+                            <div class="flex items-center justify-between">
+                                <p class="text-aksen font-black text-[9px] uppercase italic">
+                                    {{ $alat->kategori ? $alat->kategori->kategori : 'Umum' }}
+                                </p>
+                                <span class="text-slate-500 font-black text-[9px] uppercase italic">Stok: {{ $alat->stok }} Unit</span>
+                            </div>
                             <h3 class="font-black text-base text-slate-900 uppercase leading-tight truncate">
                                 {{ $alat->nama_alat }}
                             </h3>

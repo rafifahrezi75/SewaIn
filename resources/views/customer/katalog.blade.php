@@ -147,14 +147,17 @@
                                     <div class="absolute top-3 left-3 bg-aksen text-white text-[8px] font-black px-3 py-1 cartoon-border rounded-full uppercase">Tersedia</div>
                                 </div>
                                 <div class="px-1 text-left">
-                                    <p class="text-aksen font-black text-[10px] uppercase tracking-tighter italic">{{ $p->kategori ? $p->kategori->kategori : 'Umum' }}</p>
+                                    <div class="flex items-center justify-between">
+                                        <p class="text-aksen font-black text-[10px] uppercase tracking-tighter italic">{{ $p->kategori ? $p->kategori->kategori : 'Umum' }}</p>
+                                        <span class="text-slate-500 font-black text-[10px] uppercase italic">Stok: {{ $p->stok }}</span>
+                                    </div>
                                     <h3 class="font-black text-sm text-slate-900 truncate uppercase italic">{{ $p->nama_alat }}</h3>
                                     <div class="flex items-baseline gap-1 mt-1 mb-4">
                                         <span class="text-xl font-black text-primary italic">Rp{{ number_format($p->harga_sewa, 0, ',', '.') }}</span>
                                         <span class="text-slate-400 font-black text-[10px] uppercase">/hari</span>
                                     </div>
                                     <div class="flex gap-3">
-                                        <button onclick="openQtyModal({{ $p->idalat }}, '{{ addslashes($p->nama_alat) }}', {{ $p->harga_sewa }})" class="flex-none bg-yellow-300 text-black p-3 rounded-xl cartoon-border cartoon-shadow-sm cartoon-button transition-all">
+                                        <button onclick="openQtyModal({{ $p->idalat }}, '{{ addslashes($p->nama_alat) }}', {{ $p->harga_sewa }}, {{ $p->stok }})" class="flex-none bg-yellow-300 text-black p-3 rounded-xl cartoon-border cartoon-shadow-sm cartoon-button transition-all">
                                             <i data-lucide="shopping-cart" class="w-5 h-5"></i>
                                         </button>
                                         <a href="{{ route('alat.detail', $p->idalat) }}" class="flex-1 bg-primary text-white py-3 rounded-xl font-black text-[9px] flex items-center justify-center gap-2 cartoon-border cartoon-shadow-sm cartoon-button uppercase italic tracking-widest">
@@ -249,7 +252,8 @@
         <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeQtyModal()"></div>
         <div class="bg-white w-full max-w-xs rounded-[2.5rem] p-8 cartoon-border cartoon-shadow relative z-20 text-center">
             <h4 id="qtyModalTitle" class="font-black text-slate-900 text-lg mb-2 uppercase italic leading-tight">Jumlah Sewa</h4>
-            <p id="qtyModalPrice" class="text-primary font-black text-base mb-6 italic bg-yellow-100 inline-block px-2">Rp0/hari</p>
+            <p id="qtyModalPrice" class="text-primary font-black text-base mb-2 italic bg-yellow-100 inline-block px-2">Rp0/hari</p>
+            <p id="qtyModalStok" class="text-slate-500 font-black text-[11px] uppercase italic mb-6">Tersedia: 0 Unit</p>
             <div class="flex items-center bg-slate-50 rounded-2xl p-2 cartoon-border mb-6">
                 <button onclick="changeModalQty(-1)" class="w-12 h-12 flex items-center justify-center text-slate-900 font-black text-2xl">-</button>
                 <input type="number" id="modalQtyInput" value="1" class="w-full bg-transparent text-center text-xl font-black text-slate-900 outline-none" readonly>
@@ -264,10 +268,23 @@
     <script>
         let currentSelectedAlat = null;
 
-        function openQtyModal(id, nama, harga) {
-            currentSelectedAlat = { id, nama, harga };
+        function showWarningToast(message) {
+            const toast = document.createElement('div');
+            toast.className = "fixed top-5 left-1/2 -translate-x-1/2 z-[200] bg-red-400 text-white cartoon-border cartoon-shadow px-6 py-3 font-black uppercase italic text-xs animate-bounce";
+            toast.innerText = `⚠️ ${message}`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2500);
+        }
+
+        function openQtyModal(id, nama, harga, stok) {
+            if (stok <= 0) {
+                showWarningToast("Stok alat ini sedang kosong.");
+                return;
+            }
+            currentSelectedAlat = { id, nama, harga, stok };
             document.getElementById('qtyModalTitle').innerText = "Sewa " + nama;
             document.getElementById('qtyModalPrice').innerText = "Rp" + harga.toLocaleString('id-ID') + "/hari";
+            document.getElementById('qtyModalStok').innerText = "Tersedia: " + stok + " Unit";
             document.getElementById('modalQtyInput').value = 1;
             document.getElementById('qtyModal').classList.remove('hidden');
         }
@@ -278,6 +295,10 @@
             const input = document.getElementById('modalQtyInput');
             let val = parseInt(input.value) + delta;
             if (val < 1) val = 1;
+            if (val > currentSelectedAlat.stok) {
+                val = currentSelectedAlat.stok;
+                showWarningToast(`Maksimal sewa adalah ${currentSelectedAlat.stok} unit (stok terbatas)`);
+            }
             input.value = val;
         }
 
@@ -311,6 +332,11 @@
 
             const qty = parseInt(document.getElementById('modalQtyInput').value);
 
+            if (qty > currentSelectedAlat.stok) {
+                showWarningToast(`Maksimal sewa adalah ${currentSelectedAlat.stok} unit.`);
+                return;
+            }
+
             fetch('{{ route("keranjang.add") }}', {
                 method: 'POST',
                 headers: { 
@@ -330,11 +356,7 @@
                     document.body.appendChild(toast);
                     setTimeout(() => toast.remove(), 2500);
                 } else {
-                    const toast = document.createElement('div');
-                    toast.className = "fixed top-5 left-1/2 -translate-x-1/2 z-[200] bg-red-400 text-white cartoon-border cartoon-shadow px-6 py-3 font-black uppercase italic text-xs animate-bounce";
-                    toast.innerText = `❌ ${data.message || 'Gagal menambahkan'}`;
-                    document.body.appendChild(toast);
-                    setTimeout(() => toast.remove(), 2500);
+                    showWarningToast(data.message || 'Gagal menambahkan');
                 }
             });
         }

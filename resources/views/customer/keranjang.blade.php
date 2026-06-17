@@ -35,6 +35,19 @@
     </nav>
 
     <main class="max-w-6xl mx-auto px-6 py-10">
+        @if (session('error'))
+            <div class="mb-6 bg-red-100 text-red-700 p-4 rounded-2xl border-2 border-red-500 font-black text-xs uppercase italic flex items-center gap-3">
+                <i data-lucide="alert-circle" class="w-5 h-5 shrink-0"></i>
+                <span>{{ session('error') }}</span>
+            </div>
+        @endif
+        @if (session('success'))
+            <div class="mb-6 bg-green-100 text-green-700 p-4 rounded-2xl border-2 border-green-500 font-black text-xs uppercase italic flex items-center gap-3">
+                <i data-lucide="check-circle" class="w-5 h-5 shrink-0"></i>
+                <span>{{ session('success') }}</span>
+            </div>
+        @endif
+
         <div class="flex flex-col lg:flex-row gap-10">
 
             <div class="flex-1">
@@ -67,6 +80,7 @@
                                 <div class="flex-1 text-center md:text-left">
                                     <h4 class="font-black text-slate-900 text-sm italic uppercase">{{ $item->alat->nama_alat }}</h4>
                                     <p class="text-primary font-black text-xs italic">Rp{{ number_format($item->alat->harga_sewa, 0, ',', '.') }}/hari</p>
+                                    <span class="text-slate-400 font-bold text-[10px] uppercase block mt-1">Stok Tersedia: {{ $item->alat->stok }} Unit</span>
                                 </div>
                                 <div class="flex items-center gap-4 bg-slate-50 p-2 rounded-xl border border-slate-100">
                                     <a href="{{ route('keranjang.update', ['id' => $item->id_keranjang, 'delta' => -1]) }}" class="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-primary font-black text-lg">-</a>

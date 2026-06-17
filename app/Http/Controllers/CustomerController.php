@@ -109,9 +109,17 @@ class CustomerController extends Controller
         $harga_sewa = $alat->harga_sewa;
 
         $cartItem = Keranjang::where('iduser', $id_user)->where('idalat', $id_alat)->first();
+        $current_qty = $cartItem ? $cartItem->jumlah : 0;
+        $new_qty = $current_qty + $jumlah;
+
+        if ($new_qty > $alat->stok) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Jumlah sewa melebihi stok yang tersedia (Maksimal: ' . $alat->stok . ' unit. Di keranjang Anda: ' . $current_qty . ' unit).'
+            ]);
+        }
 
         if ($cartItem) {
-            $new_qty = $cartItem->jumlah + $jumlah;
             $cartItem->update([
                 'jumlah' => $new_qty,
                 'hargakeranjang' => $new_qty * $harga_sewa
@@ -152,6 +160,10 @@ class CustomerController extends Controller
         $cartItem = Keranjang::with('alat')->where('id_keranjang', $id)->where('iduser', $id_user)->firstOrFail();
 
         $new_qty = $cartItem->jumlah + (int)$delta;
+
+        if ($new_qty > $cartItem->alat->stok) {
+            return redirect()->route('keranjang.index')->with('error', 'Jumlah sewa untuk ' . $cartItem->alat->nama_alat . ' melebihi stok yang tersedia (Maksimal: ' . $cartItem->alat->stok . ' unit).');
+        }
 
         if ($new_qty >= 1) {
             $cartItem->update([

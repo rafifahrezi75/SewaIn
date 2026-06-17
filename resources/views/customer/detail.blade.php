@@ -117,8 +117,11 @@
                     <div>
                         <div class="flex items-center justify-between mb-4">
                             <span id="alatKategori" class="bg-card-pink text-black cartoon-border text-[10px] font-black px-3 py-1 rounded-lg uppercase italic">{{ $alat->kategori ? $alat->kategori->kategori : 'Umum' }}</span>
-                            <div class="flex items-center gap-1.5 bg-card-green cartoon-border px-3 py-1 rounded-lg text-[10px] font-black uppercase">
-                                <i data-lucide="circle-check" class="w-3.5 h-3.5"></i> {{ ucfirst($alat->status) }}
+                            <div class="flex items-center gap-3">
+                                <span class="bg-yellow-300 text-black cartoon-border text-[10px] font-black px-3 py-1 rounded-lg uppercase italic">Stok: {{ $alat->stok }} Unit</span>
+                                <div class="flex items-center gap-1.5 bg-card-green cartoon-border px-3 py-1 rounded-lg text-[10px] font-black uppercase">
+                                    <i data-lucide="circle-check" class="w-3.5 h-3.5"></i> {{ ucfirst($alat->status) }}
+                                </div>
                             </div>
                         </div>
                         <h1 id="alatNama" class="text-4xl font-black text-slate-900 leading-tight italic uppercase">
@@ -269,10 +272,24 @@
     </a>
 
     <script>
+        const maxStok = {{ $alat->stok }};
+
+        function showWarningToast(message) {
+            const toast = document.createElement('div');
+            toast.className = "fixed top-5 left-1/2 -translate-x-1/2 z-[200] bg-red-400 text-white cartoon-border cartoon-shadow px-6 py-3 font-black uppercase italic text-xs animate-bounce";
+            toast.innerText = `⚠️ ${message}`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2500);
+        }
+
         function changeDetailQty(delta) {
             const input = document.getElementById('detailQtyInput');
             let val = parseInt(input.value) + delta;
             if (val < 1) val = 1;
+            if (val > maxStok) {
+                val = maxStok;
+                showWarningToast(`Maksimal sewa adalah ${maxStok} unit (stok terbatas)`);
+            }
             input.value = val;
         }
 
@@ -304,6 +321,11 @@
 
             const qty = parseInt(document.getElementById('detailQtyInput').value);
 
+            if (qty > maxStok) {
+                showWarningToast(`Maksimal sewa adalah ${maxStok} unit.`);
+                return;
+            }
+
             fetch('{{ route("keranjang.add") }}', {
                 method: 'POST',
                 headers: { 
@@ -322,11 +344,7 @@
                     document.body.appendChild(toast);
                     setTimeout(() => toast.remove(), 2500);
                 } else {
-                    const toast = document.createElement('div');
-                    toast.className = "fixed top-5 left-1/2 -translate-x-1/2 z-[200] bg-red-400 text-white cartoon-border cartoon-shadow px-6 py-3 font-black uppercase italic text-xs animate-bounce";
-                    toast.innerText = `❌ ${data.message || 'Gagal menambahkan'}`;
-                    document.body.appendChild(toast);
-                    setTimeout(() => toast.remove(), 2500);
+                    showWarningToast(data.message || 'Gagal menambahkan');
                 }
             });
         }
@@ -347,6 +365,11 @@
 
             const qty = parseInt(document.getElementById('detailQtyInput').value);
 
+            if (qty > maxStok) {
+                showWarningToast(`Maksimal sewa adalah ${maxStok} unit.`);
+                return;
+            }
+
             fetch('{{ route("keranjang.add") }}', {
                 method: 'POST',
                 headers: { 
@@ -360,12 +383,12 @@
                 if (data.status === 'success') {
                     window.location.href = "{{ route('checkout.index') }}";
                 } else {
-                    alert(data.message || 'Gagal menyiapkan checkout');
+                    showWarningToast(data.message || 'Gagal menyiapkan checkout');
                 }
             })
             .catch(err => {
                 console.error("Direct checkout failed:", err);
-                alert('Kesalahan jaringan saat checkout');
+                showWarningToast('Kesalahan jaringan saat checkout');
             });
         }
 
