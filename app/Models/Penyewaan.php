@@ -23,4 +23,9 @@ class Penyewaan extends Model
     {
         return $this->hasMany(PenyewaanDetail::class, 'idsewa', 'idsewa');
     }
+
+    public function pengembalian()
+    {
+        return $this->hasOne(Pengembalian::class, 'id_sewa', 'idsewa');
+    }
 }

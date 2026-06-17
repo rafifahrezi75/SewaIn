@@ -122,9 +122,15 @@
                     <span class="text-slate-400 uppercase">Ongkos Kirim:</span>
                     <span>Rp{{ number_format($sewa->ongkir, 0, ',', '.') }}</span>
                 </div>
+                @if($sewa->pengembalian && $sewa->pengembalian->total_denda > 0)
+                <div class="flex justify-between text-red-600">
+                    <span class="uppercase">Denda Telat/Kerusakan:</span>
+                    <span>Rp{{ number_format($sewa->pengembalian->total_denda, 0, ',', '.') }}</span>
+                </div>
+                @endif
                 <div class="flex justify-between items-center pt-3 border-t-2 border-black border-dashed">
                     <span class="text-sm font-black text-slate-900 uppercase italic">Total Bayar:</span>
-                    <span class="text-lg font-black text-blue-700 italic">Rp{{ number_format($sewa->total_biaya, 0, ',', '.') }}</span>
+                    <span class="text-lg font-black text-blue-700 italic">Rp{{ number_format($sewa->total_biaya + ($sewa->pengembalian ? $sewa->pengembalian->total_denda : 0), 0, ',', '.') }}</span>
                 </div>
             </div>
         </div>

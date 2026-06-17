@@ -87,9 +87,15 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 font-medium text-gray-900">
-                            Rp {{ number_format($trx->total_biaya, 0, ',', '.') }}
+                            @php
+                                $total_bayar = $trx->total_biaya + ($trx->pengembalian ? $trx->pengembalian->total_denda : 0);
+                            @endphp
+                            Rp {{ number_format($total_bayar, 0, ',', '.') }}
                             @if($trx->ongkir > 0)
-                                <span class="text-[10px] items-center text-gray-500 block font-normal">(inc. Ongkir Rp {{ number_format($trx->ongkir, 0, ',', '.') }})</span>
+                                <span class="text-[10px] text-gray-500 block font-normal">(inc. Ongkir Rp {{ number_format($trx->ongkir, 0, ',', '.') }})</span>
+                            @endif
+                            @if($trx->pengembalian && $trx->pengembalian->total_denda > 0)
+                                <span class="text-[10px] text-red-500 block font-semibold">(inc. Denda Rp {{ number_format($trx->pengembalian->total_denda, 0, ',', '.') }})</span>
                             @endif
                         </td>
                         <td class="px-6 py-4">
@@ -127,9 +133,11 @@
                                      'lat_sewa' => $trx->lat_sewa,
                                      'lon_sewa' => $trx->lon_sewa,
                                      'ongkir' => $trx->ongkir,
-                                     'total_biaya' => $trx->total_biaya,
+                                     'total_denda' => $trx->pengembalian ? $trx->pengembalian->total_denda : 0,
+                                     'total_biaya' => $trx->total_biaya + ($trx->pengembalian ? $trx->pengembalian->total_denda : 0),
                                      'ongkir_formatted' => 'Rp ' . number_format($trx->ongkir, 0, ',', '.'),
-                                     'total_biaya_formatted' => 'Rp ' . number_format($trx->total_biaya, 0, ',', '.'),
+                                     'denda_formatted' => $trx->pengembalian && $trx->pengembalian->total_denda > 0 ? 'Rp ' . number_format($trx->pengembalian->total_denda, 0, ',', '.') : '-',
+                                     'total_biaya_formatted' => 'Rp ' . number_format($trx->total_biaya + ($trx->pengembalian ? $trx->pengembalian->total_denda : 0), 0, ',', '.'),
                                      'items' => $trx->details->map(function($d) {
                                          return [
                                              'nama_alat' => $d->alat->nama_alat ?? 'Alat',
@@ -491,6 +499,12 @@
                                     <span>Ongkos Kirim</span>
                                     <span x-text="detailData.ongkir_formatted"></span>
                                 </div>
+                                <template x-if="detailData.total_denda > 0">
+                                    <div class="flex justify-between text-red-500 font-semibold">
+                                        <span>Total Denda</span>
+                                        <span x-text="detailData.denda_formatted"></span>
+                                    </div>
+                                </template>
                                 <div class="flex justify-between text-base font-bold text-brand-600 border-t border-dashed border-gray-100 pt-2">
                                     <span>Total Biaya</span>
                                     <span x-text="detailData.total_biaya_formatted"></span>

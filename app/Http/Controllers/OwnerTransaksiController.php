@@ -10,7 +10,7 @@ class OwnerTransaksiController extends Controller
 {
     public function transaksi(Request $request)
     {
-        $query = Penyewaan::with(['user', 'details.alat']);
+        $query = Penyewaan::with(['user', 'details.alat', 'pengembalian']);
 
         if ($request->filled('search')) {
             $search = $request->search;

@@ -326,13 +326,17 @@
                     </div>
 
                     <div class="pt-4 border-t-4 border-black space-y-2">
+                        <div class="flex justify-between text-red-500 font-semibold" x-show="selectedSewa.pengembalian && selectedSewa.pengembalian.total_denda > 0">
+                            <span class="uppercase">Denda Telat/Kerusakan</span>
+                            <span x-text="'Rp' + Number(selectedSewa.pengembalian.total_denda).toLocaleString('id-ID')"></span>
+                        </div>
                         <div class="flex justify-between">
                             <span class="text-slate-400 uppercase">Ongkos Kirim</span>
                             <span class="text-slate-900" x-text="'Rp' + Number(selectedSewa.ongkir).toLocaleString('id-ID')"></span>
                         </div>
                         <div class="flex justify-between items-center">
                             <span class="text-sm font-black text-slate-900 uppercase italic">Total Pembayaran</span>
-                            <span class="text-lg font-black text-blue-700 italic" x-text="'Rp' + Number(selectedSewa.total_biaya).toLocaleString('id-ID')"></span>
+                            <span class="text-lg font-black text-blue-700 italic" x-text="'Rp' + (Number(selectedSewa.total_biaya) + (selectedSewa.pengembalian ? Number(selectedSewa.pengembalian.total_denda) : 0)).toLocaleString('id-ID')"></span>
                         </div>
                     </div>
                 </div>

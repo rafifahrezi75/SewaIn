@@ -351,14 +351,14 @@ class CustomerController extends Controller
         $id_user = Auth::id();
 
         // Active rentals (pending, disewa, kembali, menunggu qc)
-        $q_aktif = Penyewaan::with(['details.alat'])
+        $q_aktif = Penyewaan::with(['details.alat', 'pengembalian'])
             ->where('iduser', $id_user)
             ->whereNotIn('status', ['selesai', 'dibatalkan', 'ditolak'])
             ->orderBy('tanggal_mulai', 'desc')
             ->get();
 
         // Completed rentals (selesai)
-        $q_selesai = Penyewaan::with(['details.alat'])
+        $q_selesai = Penyewaan::with(['details.alat', 'pengembalian'])
             ->where('iduser', $id_user)
             ->where('status', 'selesai')
             ->orderBy('tanggal_selesai', 'desc')
@@ -407,7 +407,7 @@ class CustomerController extends Controller
         }
 
         $id_user = Auth::id();
-        $sewa = Penyewaan::with(['user', 'details.alat'])
+        $sewa = Penyewaan::with(['user', 'details.alat', 'pengembalian'])
             ->where('iduser', $id_user)
             ->where('idsewa', $id)
             ->firstOrFail();
