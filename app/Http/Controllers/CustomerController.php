@@ -396,4 +396,22 @@ class CustomerController extends Controller
 
         return redirect()->route('profil.edit')->with('success', 'Profil Anda berhasil diperbarui.');
     }
+
+    /**
+     * Print transaction receipt (Nota) for customer
+     */
+    public function cetakNota($id)
+    {
+        if (!Auth::check()) {
+            abort(403);
+        }
+
+        $id_user = Auth::id();
+        $sewa = Penyewaan::with(['user', 'details.alat'])
+            ->where('iduser', $id_user)
+            ->where('idsewa', $id)
+            ->firstOrFail();
+
+        return view('customer.nota', compact('sewa'));
+    }
 }

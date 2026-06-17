@@ -172,9 +172,6 @@
                                     <h2 class="text-3xl font-black text-white italic drop-shadow-[2px_2px_0px_#000]">
                                         <span id="alatHarga">Rp{{ number_format($alat->harga_sewa, 0, ',', '.') }}</span> <span class="text-xs font-bold text-blue-200 uppercase">/ hari</span>
                                     </h2>
-                                    <p class="text-yellow-300 text-[10px] font-black uppercase tracking-wider mt-2 flex items-center gap-1.5">
-                                        <i data-lucide="package" class="w-3.5 h-3.5"></i> Stok Tersedia: {{ $alat->stok }} Unit
-                                    </p>
                                 </div>
                                 <div class="flex items-center bg-white cartoon-border rounded-xl p-1 shadow-[2px_2px_0px_0px_#000]">
                                     <button onclick="changeDetailQty(-1)" class="w-8 h-8 font-black text-lg">-</button>

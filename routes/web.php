@@ -54,6 +54,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/checkout/sukses/{id}', [CustomerController::class, 'checkoutSukses'])->name('checkout.sukses');
     
     Route::get('/riwayat-sewa', [CustomerController::class, 'riwayat'])->name('riwayat.sewa');
+    Route::get('/riwayat-sewa/nota/{id}', [CustomerController::class, 'cetakNota'])->name('riwayat.nota');
     Route::get('/profil', [CustomerController::class, 'editProfile'])->name('profil.edit');
     Route::post('/profil/update', [CustomerController::class, 'updateProfile'])->name('profil.update');
 });

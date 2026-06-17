@@ -37,7 +37,7 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
-<body class="p-4 md:p-8" x-data="{ tab: 'aktif', modalOpen: false, returnInv: '', returnName: '' }">
+<body class="p-4 md:p-8" x-data="{ tab: 'aktif', modalOpen: false, returnInv: '', returnName: '', detailOpen: false, selectedSewa: null }">
 
     <div class="max-w-4xl mx-auto">
         <div class="flex items-center gap-4 mb-10 text-left">
@@ -103,9 +103,17 @@
                                 </div>
                             </div>
 
-                            <div class="w-full md:w-auto">
+                            <div class="w-full md:w-auto flex flex-wrap gap-3 justify-center items-center">
+                                <button @click="selectedSewa = {{ json_encode($row->load('details.alat')) }}; detailOpen = true"
+                                    class="px-4 py-2 border-2 border-black rounded-xl font-black text-[10px] uppercase italic bg-white cartoon-shadow-sm active:translate-y-0.5 transition-all">
+                                    Detail
+                                </button>
+                                <a href="{{ route('riwayat.nota', $row->idsewa) }}" target="_blank"
+                                    class="px-4 py-2 border-2 border-black rounded-xl font-black text-[10px] uppercase italic bg-yellow-300 cartoon-shadow-sm active:translate-y-0.5 transition-all flex items-center justify-center gap-1.5">
+                                    <i data-lucide="printer" class="w-3.5 h-3.5"></i> Struk
+                                </a>
                                 <button @click="modalOpen = true; returnInv = '{{ $inv }}'; returnName = '{{ addslashes($firstDetail && $firstDetail->alat ? $firstDetail->alat->nama_alat : 'Alat') }}'"
-                                    class="w-full bg-red-700 text-white px-8 py-4 rounded-2xl cartoon-border cartoon-shadow-sm font-black text-xs uppercase italic hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all active:scale-95">
+                                    class="bg-red-700 text-white px-6 py-3 rounded-xl cartoon-border cartoon-shadow-sm font-black text-[10px] uppercase italic hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all active:scale-95">
                                     Kembalikan Alat
                                 </button>
                             </div>
@@ -128,8 +136,16 @@
                                 <h3 class="text-xl font-black uppercase italic text-slate-600 tracking-tighter">{{ $tampil_nama }}</h3>
                                 <p class="text-[10px] font-bold text-slate-400 uppercase mt-1 italic leading-tight">Admin sedang memverifikasi pesanan Anda.</p>
                             </div>
-                            <div class="w-full md:w-auto">
-                                <div class="px-6 py-4 bg-slate-200 cartoon-border rounded-2xl font-black text-[10px] text-slate-500 uppercase italic text-center">
+                            <div class="w-full md:w-auto flex flex-wrap gap-3 justify-center items-center">
+                                <button @click="selectedSewa = {{ json_encode($row->load('details.alat')) }}; detailOpen = true"
+                                    class="px-4 py-2 border-2 border-black rounded-xl font-black text-[10px] uppercase italic bg-white cartoon-shadow-sm active:translate-y-0.5 transition-all">
+                                    Detail
+                                </button>
+                                <a href="{{ route('riwayat.nota', $row->idsewa) }}" target="_blank"
+                                    class="px-4 py-2 border-2 border-black rounded-xl font-black text-[10px] uppercase italic bg-yellow-300 cartoon-shadow-sm active:translate-y-0.5 transition-all flex items-center justify-center gap-1.5">
+                                    <i data-lucide="printer" class="w-3.5 h-3.5"></i> Struk
+                                </a>
+                                <div class="px-6 py-3 bg-slate-200 cartoon-border rounded-xl font-black text-[10px] text-slate-500 uppercase italic text-center">
                                     PENDING
                                 </div>
                             </div>
@@ -152,8 +168,16 @@
                                 <h3 class="text-xl font-black uppercase italic text-slate-400 tracking-tighter">{{ $tampil_nama }}</h3>
                                 <p class="text-[10px] font-bold text-slate-400 uppercase mt-1 italic leading-tight">Unit sedang dalam pengecekan QC di gudang.</p>
                             </div>
-                            <div class="w-full md:w-auto">
-                                <div class="px-6 py-4 bg-slate-200 cartoon-border rounded-2xl font-black text-[10px] text-slate-400 uppercase italic text-center">
+                            <div class="w-full md:w-auto flex flex-wrap gap-3 justify-center items-center">
+                                <button @click="selectedSewa = {{ json_encode($row->load('details.alat')) }}; detailOpen = true"
+                                    class="px-4 py-2 border-2 border-black rounded-xl font-black text-[10px] uppercase italic bg-white cartoon-shadow-sm active:translate-y-0.5 transition-all">
+                                    Detail
+                                </button>
+                                <a href="{{ route('riwayat.nota', $row->idsewa) }}" target="_blank"
+                                    class="px-4 py-2 border-2 border-black rounded-xl font-black text-[10px] uppercase italic bg-yellow-300 cartoon-shadow-sm active:translate-y-0.5 transition-all flex items-center justify-center gap-1.5">
+                                    <i data-lucide="printer" class="w-3.5 h-3.5"></i> Struk
+                                </a>
+                                <div class="px-6 py-3 bg-slate-200 cartoon-border rounded-xl font-black text-[10px] text-slate-400 uppercase italic text-center">
                                     PROSES QC
                                 </div>
                             </div>
@@ -181,8 +205,8 @@
                             $tampil_nama .= " (+ " . ($row->details->count() - 1) . " item lainnya)";
                         }
                     @endphp
-                    <div class="bg-white cartoon-border rounded-[2.5rem] p-6 flex flex-col md:flex-row items-center gap-6 opacity-70 grayscale">
-                        <div class="w-20 h-20 bg-slate-100 cartoon-border rounded-2xl flex items-center justify-center overflow-hidden">
+                    <div class="bg-white cartoon-border rounded-[2.5rem] p-6 flex flex-col md:flex-row items-center gap-6 border-b-[8px] border-slate-300">
+                        <div class="w-20 h-20 bg-slate-100 cartoon-border rounded-2xl flex items-center justify-center overflow-hidden opacity-65 grayscale">
                             @if($firstDetail && $firstDetail->alat && $firstDetail->alat->gambar)
                                 <img src="{{ asset('storage/' . $firstDetail->alat->gambar) }}" class="w-full h-full object-cover">
                             @else
@@ -194,11 +218,21 @@
                             <h3 class="text-lg font-black uppercase italic text-slate-700 leading-none mb-1 mt-1">{{ $tampil_nama }}</h3>
                             <p class="text-[10px] font-bold text-emerald-600 uppercase italic">Selesai: {{ $row->tanggal_selesai ? date('d M Y', strtotime($row->tanggal_selesai)) : '' }}</p>
                         </div>
-                        @if ($firstDetail && $firstDetail->alat)
-                            <a href="{{ route('alat.detail', $firstDetail->alat->idalat) }}" class="w-full text-center md:w-auto bg-white cartoon-border cartoon-shadow-sm px-6 py-3 rounded-xl font-black text-[10px] uppercase italic hover:bg-yellow-300 transition-all">
-                                Sewa Lagi
+                        <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                            <button @click="selectedSewa = {{ json_encode($row->load('details.alat')) }}; detailOpen = true"
+                                class="px-4 py-2 border-2 border-black rounded-xl font-black text-[10px] uppercase italic bg-white cartoon-shadow-sm active:translate-y-0.5 transition-all">
+                                Detail
+                            </button>
+                            <a href="{{ route('riwayat.nota', $row->idsewa) }}" target="_blank"
+                                class="px-4 py-2 border-2 border-black rounded-xl font-black text-[10px] uppercase italic bg-yellow-300 cartoon-shadow-sm active:translate-y-0.5 transition-all flex items-center justify-center gap-1.5">
+                                <i data-lucide="printer" class="w-3.5 h-3.5"></i> Struk
                             </a>
-                        @endif
+                            @if ($firstDetail && $firstDetail->alat)
+                                <a href="{{ route('alat.detail', $firstDetail->alat->idalat) }}" class="bg-white cartoon-border cartoon-shadow-sm px-4 py-2.5 rounded-xl font-black text-[10px] uppercase italic hover:bg-yellow-300 transition-all flex items-center justify-center">
+                                    Sewa Lagi
+                                </a>
+                            @endif
+                        </div>
                     </div>
                 @endforeach
             @else
@@ -244,6 +278,65 @@
                     </a>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Detail Transaksi Modal (Cartoon style) -->
+    <div x-show="detailOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm" x-cloak x-transition.opacity>
+        <div @click.outside="detailOpen = false" class="bg-white cartoon-border cartoon-shadow rounded-[3rem] w-full max-w-md p-8 relative overflow-hidden" x-transition.scale.90>
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-black uppercase italic text-slate-900 leading-none">Detail Peminjaman</h3>
+                <button @click="detailOpen = false" class="w-10 h-10 bg-slate-100 cartoon-border rounded-xl flex items-center justify-center cartoon-shadow-sm active:translate-y-1">
+                    <i data-lucide="x" class="w-6 h-6 text-black"></i>
+                </button>
+            </div>
+            
+            <template x-if="selectedSewa">
+                <div class="space-y-4 text-xs font-bold text-slate-800 text-left">
+                    <div class="flex justify-between border-b-2 border-dashed border-slate-200 pb-2">
+                        <span class="text-slate-400 uppercase">No. Invoice</span>
+                        <span class="text-slate-900" x-text="'#INV-' + String(selectedSewa.idsewa).padStart(4, '0')"></span>
+                    </div>
+                    <div class="flex justify-between border-b-2 border-dashed border-slate-200 pb-2">
+                        <span class="text-slate-400 uppercase">Periode Sewa</span>
+                        <span class="text-slate-900" x-text="selectedSewa.tanggal_mulai + ' s/d ' + selectedSewa.tanggal_selesai + ' (' + selectedSewa.durasi + ' Hari)'"></span>
+                    </div>
+                    <div class="flex justify-between border-b-2 border-dashed border-slate-200 pb-2">
+                        <span class="text-slate-400 uppercase">Metode Pengiriman</span>
+                        <span class="text-slate-900" x-text="selectedSewa.metode_pengiriman"></span>
+                    </div>
+                    <div class="flex justify-between border-b-2 border-dashed border-slate-200 pb-2" x-show="selectedSewa.alamat_sewa">
+                        <span class="text-slate-400 uppercase">Alamat</span>
+                        <span class="text-slate-900 text-right" x-text="selectedSewa.alamat_sewa"></span>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <p class="text-slate-400 uppercase mb-2">Daftar Alat:</p>
+                        <div class="space-y-2 max-h-40 overflow-y-auto pr-1">
+                            <template x-for="detail in selectedSewa.details">
+                                <div class="bg-slate-50 cartoon-border p-3 rounded-xl flex justify-between items-center">
+                                    <div>
+                                        <p class="font-black text-slate-900 uppercase italic" x-text="detail.alat ? detail.alat.nama_alat : 'Alat'"></p>
+                                        <p class="text-[10px] text-slate-400" x-text="detail.jumlah + ' Unit x Rp' + Number(detail.harga).toLocaleString('id-ID') + '/hari'"></p>
+                                    </div>
+                                    <span class="font-black text-slate-900" x-text="'Rp' + Number(detail.subtotal).toLocaleString('id-ID')"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t-4 border-black space-y-2">
+                        <div class="flex justify-between">
+                            <span class="text-slate-400 uppercase">Ongkos Kirim</span>
+                            <span class="text-slate-900" x-text="'Rp' + Number(selectedSewa.ongkir).toLocaleString('id-ID')"></span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm font-black text-slate-900 uppercase italic">Total Pembayaran</span>
+                            <span class="text-lg font-black text-blue-700 italic" x-text="'Rp' + Number(selectedSewa.total_biaya).toLocaleString('id-ID')"></span>
+                        </div>
+                    </div>
+                </div>
+            </template>
         </div>
     </div>
 
